@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Clients</title>
+ 
+    
+    <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+
+ 
+  </head>
+ 
+  <body>
+    <div class="container">
+        <div class="header">
+
+            <h3 class="text-muted">Make a Demand Letter/Complaint</h3>
+        </div>
+        <section>
+            <form class="form-horizontal" method="post" action="/makeDemand">
+                <fieldset>
+ 
+                    <!-- Form Name -->
+                    <legend>Add Client</legend>
+ 
+                    <!-- Text input-->
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="txtLastName">Last Name</label>
+                        <div class="col-md-4">
+                            <input id="txtLastName" name="inputLastName" type="text" class="form-control input-md">
+                        </div>
+                    </div>
+                     <div class="form-group">
+                        <label class="col-md-4 control-label" for="txtFirstName">First Name</label>
+                        <div class="col-md-4">
+                            <input id="txtFirstName" name="inputFirstName" type="text" class="form-control input-md">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="txtAddress">Address</label>
+                        <div class="col-md-4">
+                            <input id="txtAddress" name="inputAddress" type="text" class="form-control input-md">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="txtCity">City</label>
+                        <div class="col-md-4">
+                            <input id="txtCity" name="inputCity" type="text" class="form-control input-md">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="txtZipCode">Zip Code</label>
+                        <div class="col-md-4">
+                            <input id="txtZipCode" name="inputZipCode" type="text" class="form-control input-md">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                    <label class="form-check-inline">
+                      <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> Male, prefers 'he, his, him'
+                    </label>
+                    <label class="form-check-inline">
+                      <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> Female prefers 'she, hers, her'
+                    </label>
+                    <label class="form-check-inline">
+                      <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3"> Prefers 'they, theirs, them'
+                    </label>
+                    </div>
+                                        <!-- Button -->
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="singlebutton"></label>
+                        <div class="col-md-4">
+                            <input id="singlebutton" name="singlebutton" class="btn btn-primary" type="submit" value="Add Client" />
+                        </div>
+                    </div>
+
+                    <legend>Add Place of Public Accommodation</legend>
+ 
+
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="txtEmail">Place of Public Accommodation</label>
+                        <div class="col-md-4">
+                            <input id="PlofPA" name="PlofPA" type="text" class="form-control input-md">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="txtAddress">Address</label>
+                        <div class="col-md-4">
+                            <input id="txtAddress" name="inputAddress" type="text" class="form-control input-md">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="txtCity">City</label>
+                        <div class="col-md-4">
+                            <input id="txtCity" name="inputCity" type="text" class="form-control input-md">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="txtZipCode">Zip Code</label>
+                        <div class="col-md-4">
+                            <input id="txtZipCode" name="inputZipCode" type="text" class="form-control input-md">
+                        </div>
+                    </div>
+                    
+
+
+                                        <!-- Button -->
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="singlebutton"></label>
+                        <div class="col-md-4">
+                            <input id="singlebutton" name="singlebutton" class="btn btn-primary" type="submit" value="Add Place" />
+                        </div>
+                    </div>
+
+                    <legend>Type(s) of ADA Violation(s)</legend>
+
+                <div class="form-group">
+                <div class="form-check">
+                  <label class="form-check-label">
+                    <input class="form-check-input" type="checkbox" value="">
+                    Entrance
+                  </label>
+                </div>
+                <div class="form-check">
+                  <label class="form-check-label">
+                    <input class="form-check-input" type="checkbox" value="">
+                    Parking
+                  </label>
+                </div>
+                </div>
+
+                </fieldset>
+            </form>
+ 
+        </section>
+        <footer class="footer">
+            <p>&copy; Company 2015</p>
+        </footer>
+ 
+    </div>
+  </body>
+</html>

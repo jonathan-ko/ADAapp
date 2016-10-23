@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Clients</title>
+ 
+    
+    <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+
+ 
+  </head>
+ 
+  <body>
+    <div class="container">
+        <div class="header">
+            <nav>
+                <ul class="nav nav-pills pull-right">
+                    <li role="presentation" class="active"><a href="#">Add Client</a>
+                    </li>
+                    <li role="presentation"><a href="/client">Find Client</a>
+                    </li>
+                </ul>
+            </nav>
+            <h3 class="text-muted">Client Management</h3>
+        </div>
+        <section>
+            <form class="form-horizontal" method="post" action="/addClient">
+                <fieldset>
+ 
+                    <!-- Form Name -->
+                    <legend>Add Place of Public Accommodation</legend>
+ 
+                    <!-- Text input-->
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="txtBusinessName">Business Name</label>
+                        <div class="col-md-4">
+                            <input id="txtBusinessName" name="inputBusinessName" type="text" class="form-control input-md">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="txtAddress">Address</label>
+                        <div class="col-md-4">
+                            <input id="txtAddress" name="inputAddress" type="text" class="form-control input-md">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="txtCity">City</label>
+                        <div class="col-md-4">
+                            <input id="txtCity" name="inputCity" type="text" class="form-control input-md">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="txtZipCode">Zip Code</label>
+                        <div class="col-md-4">
+                            <input id="txtZipCode" name="inputZipCode" type="text" class="form-control input-md">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="txtEmail">Web address</label>
+                        <div class="col-md-4">
+                            <input id="txtEmail" name="inputEmail" type="text" class="form-control input-md">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="txtEmail">Email contact</label>
+                        <div class="col-md-4">
+                            <input id="txtEmail" name="inputEmail" type="text" class="form-control input-md">
+                        </div>
+                    </div>
+
+
+
+
+                    <!-- Textarea -->
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="txtNotes">Notes</label>
+                        <div class="col-md-4">
+                            <textarea class="form-control" id="txtNotes" name="inputNotes"></textarea>
+                        </div>
+                    </div>
+                    <!-- End Textarea -->
+
+
+
+                    <!-- Button -->
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="singlebutton"></label>
+                        <div class="col-md-4">
+                            <input id="singlebutton" name="singlebutton" class="btn btn-primary" type="submit" value="Add Place" />
+                        </div>
+                    </div>
+ 
+                </fieldset>
+            </form>
+ 
+        </section>
+        <footer class="footer">
+            <p>&copy; Company 2015</p>
+        </footer>
+ 
+    </div>
+  </body>
+</html>
