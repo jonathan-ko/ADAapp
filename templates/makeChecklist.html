@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Checklists</title>
+ 
+    
+    <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="../static/js/jquery-ui.js"></script>
+    
+    <script type="text/javascript" src="../static/js/jquery.fileupload.js"></script>
+    <script type="text/javascript" src="../static/js/jquery.fileupload-process.js"></script>
+    <script type="text/javascript" src="../static/js/jquery.fileupload-ui.js"></script>
+
+
+    <script type="text/javascript">
+
+        $(function() {
+            $('#fileupload').fileupload({
+                url: 'upload',
+                dataType: 'json',
+                add: function(e, data) {
+                    data.submit();
+                },
+                success: function(response, status) {
+                    console.log(response);
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        })
+
+    </script>
+
+
+        <style>
+        .btn-file {
+            position: relative;
+            overflow: hidden;
+        }
+         
+        .btn-file input[type=file] {
+            position: absolute;
+            top: 0;
+            right: 0;
+            min-width: 100%;
+            min-height: 100%;
+            font-size: 100px;
+            text-align: right;
+            filter: alpha(opacity=0);
+            opacity: 0;
+            outline: none;
+            background: white;
+            cursor: inherit;
+            display: block;
+        }
+    </style>
+ 
+  </head>
+ 
+  <body>
+    <div class="container">
+        <div class="header">
+            <nav>
+                <ul class="nav nav-pills pull-right">
+                    <li role="presentation" class="active"><a href="#">Make Checklist</a>
+                    </li>
+                    <li role="presentation"><a href="/checklist">Get Checklist </a>
+                    </li>
+                </ul>
+            </nav>
+            <h3 class="text-muted">Make Checklist</h3>
+        </div>
+        <section>
+            <form class="form-horizontal" method="post" action="/addChecklist">
+                <fieldset>
+ 
+                    <!-- Form Name -->
+                    <legend>Add Item</legend>
+ 
+                    <!-- Text input-->
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="txtCategoryName">Category Name</label>
+                        <div class="col-md-4">
+                            <input id="txtCategoryName" name="inputCategoryName" type="text" class="form-control input-md">i.e. Parking 
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="txtPost">Photos</label>
+         
+                        <div class="input-group col-md-4">
+                            <span class="input-group-btn">
+                            <span class="btn btn-primary btn-file">
+                                Browse&hellip; <input type="file" id="fileupload" name="file" multiple>
+                            </span>
+                            </span>
+                            <input type="text" class="form-control" readonly>
+                        </div>
+                    </div>
+
+                    <!-- Textarea -->
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="txtNotes">Description</label>
+                        <div class="col-md-4">
+                            <textarea class="form-control" id="txtDescription" name="inputDescription"></textarea>
+                        </div>
+                    </div>
+                    <!-- End Textarea --> 
+
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="txtAddress">Measurements</label>
+                        <div class="col-md-4">
+                            <input id="txtMeasurements" name="inputMeasurements" type="text" class="form-control input-md">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="txtAddress">Minumum</label>
+                        <div class="col-md-4">
+                            <input id="txtMinumum" name="inputMinumum" type="text" class="form-control input-md">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="txtAddress">Maximum</label>
+                        <div class="col-md-4">
+                            <input id="txtMaximum" name="inputMaximum" type="text" class="form-control input-md">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="txtAddress">Required Element?</label>
+                        <div class="col-md-4">
+                            <input id="txtMaximum" name="inputMaximum" type="text" class="form-control input-md">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Is the element present?</label><br/>
+                        <div class="col-md-4">
+                        <input name="done" type="checkbox"> Yes 
+                        <input name="done" type="checkbox"> No 
+                        <input id="txtReason" name="inputReason" type="text" class="form-control input-md hidden">
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Does this measurement conform to ADA Standards?</label><br/>
+                        <div class="col-md-4">                        
+                        <input name="done" type="checkbox"> Yes
+                        <input name="done" type="checkbox"> No 
+                        <input id="txtMaximum" name="inputMaximum" type="text" class="form-control input-md hidden">
+                        </div>
+                    </div>
+         
+
+                    <!-- Button -->
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="singlebutton"></label>
+                        <div class="col-md-4">
+                            <input id="singlebutton" name="singlebutton" class="btn btn-primary" type="submit" value="Add Standard" />
+                        </div>
+                    </div>
+
+
+ 
+                </fieldset>
+            </form>
+ 
+        </section>
+        <footer class="footer">
+            <p>&copy; Company 2015</p>
+        </footer>
+ 
+    </div>
+  </body>
+</html>

@@ -1,22 +1,27 @@
 from flask import Flask, render_template, request, redirect, session
-from flaskext.mysql import MySQL
+from flask_pymongo import PyMongo
+from pymongo import MongoClient
 import json
 	
 from werkzeug import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
+Client = MongoClient()
+db = Client.WACDAdb
+users = db.users
 
 app.secret_key = 'why would I tell you my secret key?'
 
 
-mysql = MySQL()
+#mysql = MySQL()
 	 
 # MySQL configurations
-app.config['MYSQL_DATABASE_USER'] = 'oliver'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'holmes'
-app.config['MYSQL_DATABASE_DB'] = 'contacts'
-app.config['MYSQL_DATABASE_HOST'] = 'localhost'
-mysql.init_app(app)
+#app.config['MYSQL_DATABASE_USER'] = 'oliver'
+#app.config['MYSQL_DATABASE_PASSWORD'] = 'holmes'
+#app.config['MYSQL_DATABASE_DB'] = 'contacts'
+#app.config['MYSQL_DATABASE_HOST'] = 'localhost'
+#mysql.init_app(app)
+
 
 @app.route("/")
 def main():
@@ -33,21 +38,24 @@ def showSignUp():
 @app.route('/signUp', methods=['POST'])
 def signUp():
     # read the posted values from the UI
-    _name = request.form['inputName']
-    _email = request.form['inputEmail']
-    _password = request.form['inputPassword']
+    Last_name = request.form['inputLastName']
+    First_name = request.form['inputFirstName']
+    email = request.form['inputEmail']
+    password = request.form['inputPassword']
     # validate the received values
-    if _name and _email and _password:
-    	_hashed_password = generate_password_hash(_password)
-        conn = mysql.connect()
-        cursor = conn.cursor()
-        cursor.callproc('sp_createUser',(_name,_email,_hashed_password))
-        data = cursor.fetchall()	 
-        if len(data) is 0:
-            conn.commit()
+    if Last_name and First_name and email and password:
+    	hashed_password = generate_password_hash(password)
+        #conn = mysql.connect()
+        #cursor = conn.cursor()
+        #cursor.callproc('sp_createUser',(_name,_email,_hashed_password))
+        #data = cursor.fetchall()
+        #if len(data) is 0:
+            #conn.commit()
+        if users.count({"Email": email}) == 0:
+            users.insert_one({"Last_name": Last_name, "First_name": First_name, "Email": email, "hashed_password": hashed_password})
             return json.dumps({'message':'User created successfully !'})
         else:
-            return json.dumps({'error':str(data[0])})
+            return json.dumps({'error':'<span>Email exists!</span>'})
     else:
         return json.dumps({'html':'<span>Enter the required fields</span>'})
 
@@ -58,30 +66,16 @@ def showSignin():
 @app.route('/validateLogin',methods=['POST'])
 def validateLogin():
     try:
-        _username = request.form['inputEmail']
-        _password = request.form['inputPassword']
-  
-        # connect to mysql
- 
-        con = mysql.connect()
-        cursor = con.cursor()
-        cursor.callproc('sp_validateLogin',(_username,))
-        data = cursor.fetchall()
-  
-        if len(data) > 0:
-            if check_password_hash(str(data[0][3]),_password):
-                session['user'] = data[0][0]
-                return redirect('/dashboard')
-            else:
-                return render_template('error.html',error = 'Wrong Email address or Password.')
+        username = request.form['inputEmail']
+        password = request.form['inputPassword']
+        data = users.find_one({"Email":username})
+        if check_password_hash(data['hashed_password'],password):
+            session['user'] = data['Email']
+            return redirect('/dashboard')
         else:
-            return render_template('error.html',error = 'Wrong Email address or Password.')
- 
+            return render_template('error.html',error = 'Wrong Email address or Password.') 
     except Exception as e:
         return render_template('error.html',error = str(e))
-    finally:
-        cursor.close()
-        con.close()
 
 @app.route('/dashboard')
 def dashboard():
