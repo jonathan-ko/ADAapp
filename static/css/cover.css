@@ -27,7 +27,7 @@ a:hover {
 html,
 body {
   height: 100%;
-  background-image: url('../static/lawlib.jpg'); 
+  /*background-image: url('../lawlib.jpg'); */
   background-repeat: no-repeat;
 }
 body {
