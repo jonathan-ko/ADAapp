@@ -15,9 +15,9 @@ users = db.users
 contacts = db.contacts
 access = db.access
 places = db.places
+types = db.types
 
 app.secret_key = 'why would I tell you my secret key?'
-
 # This is the path to the upload directory
 app.config['UPLOAD_FOLDER'] = 'static/upload/'
 # These are the extension that we are accepting to be uploaded
@@ -36,6 +36,43 @@ def about():
 def showSignUp():
     return render_template('signup.html')
 
+@app.route('/showSignin')
+def showSignin():
+    return render_template('signin.html')
+
+@app.route('/showTestUpload')
+def testUpload():
+    return render_template('testUpload.html')
+
+@app.route('/getPlaces')
+def getPlaces():
+    return render_template('addPlace.html')
+
+@app.route('/showClients')
+def getClientList():
+    return render_template('clients.html')
+
+@app.route('/showContacts')
+def getContact():
+    return render_template('addContact.html')
+
+@app.route('/logout')
+def logout():
+    session.pop('user',None)
+    return redirect('/')
+
+@app.route("/testDash")
+def testDash():
+    return render_template('testDash.html')
+
+
+@app.route('/dashboard')
+def dashboard():
+    if session.get('user'):
+        return render_template('dashboard.html')
+    else:
+        return render_template('error.html',error = 'Unauthorized Access')
+
 @app.route('/signUp', methods=['POST'])
 def signUp():
     # read the posted values from the UI
@@ -51,10 +88,6 @@ def signUp():
             return json.dumps({'error':'<span>Email exists!</span>'})
     else:
         return json.dumps({'html':'<span>Enter the required fields</span>'})
-
-@app.route('/showSignin')
-def showSignin():
-    return render_template('signin.html')
 
 @app.route('/validateLogin',methods=['POST'])
 def validateLogin():
@@ -101,17 +134,6 @@ def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'],filename)
 
 
-@app.route('/showTestUpload')
-def testUpload():
-    return render_template('testUpload.html')
-
-@app.route('/dashboard')
-def dashboard():
-    if session.get('user'):
-        return render_template('dashboard.html')
-    else:
-        return render_template('error.html',error = 'Unauthorized Access')
-
 @app.route('/addPlaces', methods=['POST'])
 def addPlaces():
     if session.get('user'):
@@ -119,23 +141,16 @@ def addPlaces():
         user_obj=users.find_one({"email":email})
         user_id=user_obj['_id']
         # read the posted values from the UI
-        dba = request.form['inputDBA']
+        dba = request.form['inputBusinessName']
         address = request.form['inputAddress']
         city = request.form['inputCity']
         zipcode = request.form['inputZipCode']
         notes = request.form['inputNotes']
-        places.insert_one({"dba": dba, "address":address, "city":city, "zipcode":zipcode, "notes":notes, "case_info":[] "user_id":str(user_id)})
-        return redirect('/dashboard.html')
+        web_address = request.form['inputWebAddress']
+        places.insert_one({"dba": dba, "address":address, "city":city, "zipcode":zipcode, "notes":notes, "web_address": web_address, "case_ids":[], "client_ids":[], "contact_ids":[], "user_id":str(user_id)})
+        return redirect('/dashboard')
     else:
         return redirect('signin.html')
-
-@app.route('/getPlaces')
-def getPlaces():
-    return render_template('getPlace.html')
-
-@app.route('/showClients')
-def getClientList():
-    return render_template('clients.html')
 
 @app.route('/addContact', methods=['POST'])
 def addContact():
@@ -153,14 +168,15 @@ def addContact():
             city = request.form['inputCity']
             zipcode = request.form['inputZipCode']
             notes = request.form['inputNotes']
-            contacts.insert_one({"last_name":last_name, "first_name":first_name, "address":address, "city":city, "zipcode":zipcode, "notes":notes, "case_info":[] "user_id":str(user_id)})
+            contact_type = request.form['contactType']
+            contacts.insert_one({"last_name":last_name, "first_name":first_name, "address":address, "city":city, "zipcode":zipcode, "notes":notes, "contact_type":contact_type, "case_info":[], "user_id":str(user_id)})
             return redirect('/showClients')
         else:
             return redirect('signin.html')
     except:
         return render_template('error.html', error = str(e))
 
-@app.route('/getClients')
+@app.route('/getClients',methods=['GET', 'POST'])
 def getClient():
     if session.get('user'):
         email = session.get('user')
@@ -171,16 +187,9 @@ def getClient():
     else:
         return render_template('error.html', error = 'Unauthorized Access')
 
-
-@app.route('/logout')
-def logout():
-    session.pop('user',None)
-    return redirect('/')
-
-
-@app.route("/testDash")
-def testDash():
-    return render_template('testDash.html')
+@app.route('/getTypes',methods=['GET', 'POST'])
+def getTypes():
+    return types
 
 
 if __name__ == "__main__":

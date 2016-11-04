@@ -1,55 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Places</title>
+    <title>Contacts</title>
  
     
     <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+  <script>
 
- <script>
-var x = $("#demo");
-function getLocation() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showPosition);
-    } else {
-        x.append("<p>Geolocation is not supported by this browser.</p>");
-    }
-}
-function showPosition(position) {
-    console.log("Latitude: " + position.coords.latitude + "Longitude: " + position.coords.longitude)
-    var coordinates='<p>Latitude: ' + position.coords.latitude + 'Longitude: ' + position.coords.longitude+'</p>';
-    x.append(coordinates); 
-}
-
+    $(function() {
+        $.ajax({
+            url: '/getTypes',
+            type: 'GET',
+            success: function(res) {
+                console.log(res);
+                var types = JSON.parse(res);
+                  $('#contactType').append("<option>"+types.contactTypes+"</option>");
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+    });
 </script>
-
+ 
   </head>
  
   <body>
     <div class="container">
-
-<br>
-
         <div class="header">
-
+            <nav>
+                <ul class="nav nav-pills pull-right">
+                    <li role="presentation" class="active"><a href="#">Add Client</a>
+                    </li>
+                    <li role="presentation"><a href="/client">Find Client</a>
+                    </li>
+                </ul>
+            </nav>
             <h3 class="text-muted">Client Management</h3>
         </div>
         <section>
-            <form class="form-horizontal" method="post" action="/addPlaces">
+            <form class="form-horizontal" method="post" action="/addContact">
                 <fieldset>
  
                     <!-- Form Name -->
-                    <legend>Add Place of Public Accommodation</legend>
+                    <legend>Add Contact</legend>
  
                     <!-- Text input-->
                     <div class="form-group">
-                        <label class="col-md-4 control-label" for="txtBusinessName">Business Name</label>
+                        <label class="col-md-4 control-label" for="txtLastName">Last Name</label>
                         <div class="col-md-4">
-                            <input id="txtBusinessName" name="inputBusinessName" type="text" class="form-control input-md">
+                            <input id="txtLastName" name="inputLastName" type="text" class="form-control input-md">
                         </div>
                     </div>
-
+                     <div class="form-group">
+                        <label class="col-md-4 control-label" for="txtFirstName">First Name</label>
+                        <div class="col-md-4">
+                            <input id="txtFirstName" name="inputFirstName" type="text" class="form-control input-md">
+                        </div>
+                    </div>
                     <div class="form-group">
                         <label class="col-md-4 control-label" for="txtAddress">Address</label>
                         <div class="col-md-4">
@@ -69,14 +77,7 @@ function showPosition(position) {
                             <input id="txtZipCode" name="inputZipCode" type="text" class="form-control input-md">
                         </div>
                     </div>
-
-                    <div class="form-group">
-                        <label class="col-md-4 control-label" for="txtEmail">Web address</label>
-                        <div class="col-md-4">
-                            <input id="txtEmail" name="inputWebAddress" type="text" class="form-control input-md">
-                        </div>
-                    </div>
-
+                    
 
                     <!-- Textarea -->
                     <div class="form-group">
@@ -87,13 +88,18 @@ function showPosition(position) {
                     </div>
                     <!-- End Textarea -->
 
-
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="txtNotes">Notes</label>
+                        <div class="col-md-4">
+                    <select class="selectpicker"id="contactType" name ="contactType">Contact Type</select>
+                        </div>
+                    </div>
 
                     <!-- Button -->
                     <div class="form-group">
                         <label class="col-md-4 control-label" for="singlebutton"></label>
                         <div class="col-md-4">
-                            <input id="singlebutton" name="singlebutton" class="btn btn-primary" type="submit" value="Add Place" />
+                            <input id="singlebutton" name="singlebutton" class="btn btn-primary" type="submit" value="Add Client" />
                         </div>
                     </div>
  
@@ -101,10 +107,6 @@ function showPosition(position) {
             </form>
  
         </section>
-
-        <div id="demo" ></div>
-
-        <button onclick="getLocation()" >work</button>
         <footer class="footer">
             <p>&copy; Company 2015</p>
         </footer>
