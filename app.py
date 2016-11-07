@@ -154,27 +154,29 @@ def addPlaces():
 
 @app.route('/addContact', methods=['POST'])
 def addContact():
-    try:
-        if session.get('user'):
-            email = session.get('user')
-            user_obj=users.find_one({"email":email})
-            user_id=user_obj['_id']
-            print user_id
+    if session.get('user'):
+        email = session.get('user')
+        user_obj=users.find_one({"email":email})
+        user_id=user_obj['_id']
+        print user_id
 
-            # read the posted values from the UI
-            last_name = request.form['inputLastName']
-            first_name = request.form['inputFirstName']
-            address = request.form['inputAddress']
-            city = request.form['inputCity']
-            zipcode = request.form['inputZipCode']
-            notes = request.form['inputNotes']
-            contact_type = request.form['contactType']
-            contacts.insert_one({"last_name":last_name, "first_name":first_name, "address":address, "city":city, "zipcode":zipcode, "notes":notes, "contact_type":contact_type, "case_info":[], "user_id":str(user_id)})
-            return redirect('/showClients')
-        else:
-            return redirect('signin.html')
-    except:
-        return render_template('error.html', error = str(e))
+        # read the posted values from the UI
+        last_name = request.form['inputLastName']
+        first_name = request.form['inputFirstName']
+        address = request.form['inputAddress']
+        city = request.form['inputCity']
+        zipcode = request.form['inputZipCode']
+        try:
+            gender = request.form['othergender']
+        except:
+            gender = request.form['inputGender']
+        notes = request.form['inputNotes']
+        contact_type = request.form['inputContactType']
+        print ({"last_name":last_name, "first_name":first_name, "address":address, "city":city, "zipcode":zipcode, "gender":gender, "notes":notes, "contact_type":contact_type, "case_info":[], "user_id":str(user_id)})
+        contacts.insert_one({"last_name":last_name, "first_name":first_name, "address":address, "city":city, "zipcode":zipcode, "gender":gender, "notes":notes, "contact_type":contact_type, "case_info":[], "user_id":str(user_id)})
+        return redirect('/showContacts')
+    else:
+        return redirect('signin.html')
 
 @app.route('/getClients',methods=['GET', 'POST'])
 def getClient():
@@ -189,7 +191,7 @@ def getClient():
 
 @app.route('/getTypes',methods=['GET', 'POST'])
 def getTypes():
-    return types
+    return json.dumps(types.find()[0]['contact_types'])
 
 
 if __name__ == "__main__":

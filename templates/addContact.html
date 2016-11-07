@@ -5,7 +5,10 @@
  
     
     <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
-  <script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+    <script>
 
     $(function() {
         $.ajax({
@@ -14,15 +17,32 @@
             success: function(res) {
                 console.log(res);
                 var types = JSON.parse(res);
-                  $('#contactType').append("<option>"+types.contactTypes+"</option>");
+                for (var i = types.length - 1; i >= 0; i--) {
+                    $('#contactType').append("<option>"+types[i]+"</option>");
+                };
             },
             error: function(error) {
                 console.log(error);
             }
         });
+
+        $('#gender').change(function(){
+            if ($('#gender').val() == 'I prefer to identify as...') {
+            $('#othergender').removeClass('hidden');
+        }
     });
+
+var selectedOption = $("#gender option:selected").text();
+$("<input/>",{type:'hidden',name:'inputGender'}).val(selectedOption).appendTo("form");
+
+var selectedOption2 = $("#contactType option:selected").text();
+$("<input/>",{type:'hidden',name:'inputContactType'}).val(selectedOption2).appendTo("form");
+
+    });
+
 </script>
- 
+  
+
   </head>
  
   <body>
@@ -46,16 +66,17 @@
                     <legend>Add Contact</legend>
  
                     <!-- Text input-->
-                    <div class="form-group">
-                        <label class="col-md-4 control-label" for="txtLastName">Last Name</label>
-                        <div class="col-md-4">
-                            <input id="txtLastName" name="inputLastName" type="text" class="form-control input-md">
-                        </div>
-                    </div>
+
                      <div class="form-group">
                         <label class="col-md-4 control-label" for="txtFirstName">First Name</label>
                         <div class="col-md-4">
                             <input id="txtFirstName" name="inputFirstName" type="text" class="form-control input-md">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="txtLastName">Last Name</label>
+                        <div class="col-md-4">
+                            <input id="txtLastName" name="inputLastName" type="text" class="form-control input-md">
                         </div>
                     </div>
                     <div class="form-group">
@@ -78,6 +99,18 @@
                         </div>
                     </div>
                     
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="gender">Gender</label>
+                        <div class="col-md-4 col-sm-3" >
+                        <select class ="form-control" id="gender" name="gender">
+                            <option>Male</option>
+                            <option>Female</option>
+                            <option>I prefer to identify as...</option>
+                        </select>
+                        </div>
+                    </div>
+
+                    <input class="form-control hidden" id="othergender" name ="othergender">
 
                     <!-- Textarea -->
                     <div class="form-group">
@@ -89,17 +122,19 @@
                     <!-- End Textarea -->
 
                     <div class="form-group">
-                        <label class="col-md-4 control-label" for="txtNotes">Notes</label>
-                        <div class="col-md-4">
-                    <select class="selectpicker"id="contactType" name ="contactType">Contact Type</select>
+                        <label class="col-md-4 control-label" for="contactType">Contact Type</label>
+                        <div class="col-md-4 col-sm-3" >
+                        <select class ="form-control" id="contactType">
+                        </select>
                         </div>
                     </div>
+                    <br>
 
                     <!-- Button -->
                     <div class="form-group">
                         <label class="col-md-4 control-label" for="singlebutton"></label>
                         <div class="col-md-4">
-                            <input id="singlebutton" name="singlebutton" class="btn btn-primary" type="submit" value="Add Client" />
+                            <input id="singlebutton" name="singlebutton" class="btn btn-primary" type="submit" value="Add Contact" />
                         </div>
                     </div>
  
@@ -112,5 +147,10 @@
         </footer>
  
     </div>
+
+
   </body>
+
+
+
 </html>
