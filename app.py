@@ -16,6 +16,7 @@ contacts = db.contacts
 access = db.access
 places = db.places
 types = db.types
+checklists = db.checklists
 
 app.secret_key = 'why would I tell you my secret key?'
 # This is the path to the upload directory
@@ -56,10 +57,10 @@ def getClientList():
 def getContact():
     return render_template('addContact.html')
 
-@app.route('/logout')
-def logout():
-    session.pop('user',None)
-    return redirect('/')
+@app.route("/checklists")
+def getChecklists():
+    checklist_names=checklists.find()[1]
+    return render_template('getChecklists.html', checklist_names)
 
 @app.route("/testDash")
 def testDash():
@@ -72,6 +73,11 @@ def dashboard():
         return render_template('dashboard.html')
     else:
         return render_template('error.html',error = 'Unauthorized Access')
+
+@app.route('/logout')
+def logout():
+    session.pop('user',None)
+    return redirect('/')
 
 @app.route('/signUp', methods=['POST'])
 def signUp():
