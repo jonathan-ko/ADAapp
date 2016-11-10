@@ -6,7 +6,7 @@ import json
 	
 from werkzeug import generate_password_hash, check_password_hash, secure_filename
 
-
+import uuid
 
 app = Flask(__name__)
 Client = MongoClient()
@@ -123,12 +123,18 @@ def upload():
         if file and allowed_file(file.filename):
             # Make the filename safe, remove unsupported chars
             filename = secure_filename(file.filename)
+
+            extension = os.path.splitext(file.filename)[1]
+
+            f_name = str(uuid.uuid4()) + extension
+
+
             # Move the file form the temporal folder to
             # the upload folder we setup
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], f_name))
             # Redirect the user to the uploaded_file route, which
             # will basicaly show on the browser the uploaded file
-            return #redirect(url_for('uploaded_file', filename=filename))
+            return json.dumps({'filename':f_name})#redirect(url_for('uploaded_file', filename=filename))
 
 # This route is expecting a parameter containing the name
 # of a file. Then it will locate that file on the upload

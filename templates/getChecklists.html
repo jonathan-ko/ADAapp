@@ -3,17 +3,16 @@
   <head>
     <title>Checklists</title>
  
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 
     <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="../static/css/jquery-ui.css">
 
     <script src="http://getbootstrap.com/dist/js/bootstrap.min.js"></script>
 
     <script src="../static/js/jquery-ui.js"></script>
     
-    <script type="text/javascript" src="../static/js/jquery.fileupload.js"></script>
-    <script type="text/javascript" src="../static/js/jquery.fileupload-process.js"></script>
-    <script type="text/javascript" src="../static/js/jquery.fileupload-jquery-ui.js"></script>
 
 
     <script type="text/javascript">
@@ -48,35 +47,19 @@
         margin-bottom: 0px;
     }
 </style>
-        <style>
-        .btn-file {
-            position: relative;
-            overflow: hidden;
-        }
-         
-        .btn-file input[type=file] {
-            position: absolute;
-            top: 0;
-            right: 0;
-            min-width: 100%;
-            min-height: 100%;
-            font-size: 100px;
-            text-align: right;
-            filter: alpha(opacity=0);
-            opacity: 0;
-            outline: none;
-            background: white;
-            cursor: inherit;
-            display: block;
-        }
-    </style>
  
   </head>
  
   <body>
+    <div class="container">
 
+    <nav>
+        <ul class="nav nav-tabs">
+            <li role="presentation" class="active"><a href=""><strong>Checklists</strong></a></li>
+            <li role="presentation"><a href=""><strong>Checklist Name</strong></a></li>
 
-
+        </ul>
+    </nav>
 
 <div class="row">
     <div class="col-md-12">
@@ -85,149 +68,27 @@
  
             <ul id="ulist" class="list-group">
  
-
-
-    <li class="list-group-item">
-  
-            <label>
-                <h3>Approach and Entrance </h3>
-            </label>
-      
-        <div class="pull-right action-buttons">
-            <a data-toggle="modal" data-target="#editModal"><span class="glyphicon glyphicon-pencil"></span></a>
-        </div>
-               
-<div class="row">
-
-        <p class="col-md-3">
-            Is there at least one route from site arrival points (parking, passenger loading zones, public sidewalks and public transportation stops) that does not require the use of stairs?
-
-        
-        [See 2010 ADA Standards for Accessible Design – 206.2.1]
-        </p>
-
-        <img class="col-md-3 hidden" height="200" width="300" src="">
-
-    <div class="form-group col-md-3">
-        <label class="control-label">Does this measurement conform to ADA Standards?</label><br>
-        <div>                        
-        <input name="done" type="checkbox"> Yes
-        <input name="done" type="checkbox"> No 
-        </div>
-    </div>
-
-        <div class="form-group col-md-3">
-             <label class="control-label">Measurement:</label><br>
-    <input id="measurement" class="form-control"></input><br>
-     <label class="control-label">Notes:</label><br>
-        <textarea></textarea>
-        </div>
-
-</div>
-    </li>
-
-
      <li class="list-group-item">
         <div class="checkbox">
             <label>
-                <h3>Exterior Accessible Route </h3> 
+               {{checklist name}}
             </label>
         </div>
         <div class="pull-right action-buttons">
-            <a data-toggle="modal" data-target="#editModal"><span class="glyphicon glyphicon-pencil"></span></a>
+            <a href="checklist_template({{checklist name}})"><span class="glyphicon glyphicon-pencil"></span></a>
             
         </div>
-
-<div class="row">
-
-        <p class="col-md-3">
-            Is the route at least 36 inches wide?
-[See 2010 ADA Standards for Accessible Design – 403.5.1]
-
-
-        </p>
-
-        <img class="col-md-3 col-sm-12 col-xs-12" src="../static/ApproachandEntrance.png">
-
-    <div class="form-group col-md-3">
-        <label class="control-label">Does this measurement conform to ADA Standards?</label><br>
-        <div>                        
-        <input name="done" type="checkbox"> Yes
-        <input name="done" type="checkbox"> No 
-        </div>
-    </div>
-    
-
-        <div class="form-group col-md-3">
-             <label class="control-label">Measurement:</label><br>
-    <input id="measurement" class="form-control"></input><br>
-     <label class="control-label">Notes:</label><br>
-        <textarea></textarea>
-        </div>
-
-</div>
-
     </li>
+ 
             </ul>
         </div>
  
     </div>
 </div>
 
+<a data-toggle="modal" data-target="#addModal"><span class="glyphicon glyphicon-plus"></span></a>
 
-<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
-                </button>
-                <h4 class="modal-title" id="editModalLabel">Update Item</h4>
-            </div>
-            <div class="modal-body">
-                <form role="form">
-                    <div class="form-group">
-                        <label for="recipient-name" class="control-label">Title:</label>
-                        <input type="text" class="form-control" id="editTitle">
-                    </div>
- 
-                    <!-- Text input-->
-                    <div class="form-group">
-                        <label class="col-md-4 control-label" for="txtCategoryName">Category Name</label>
-                        <div class="col-md-4">
-                            <input id="txtCategoryName" name="inputCategoryName" type="text" class="form-control input-md">i.e. Parking 
-                        </div>
-                    </div>
 
-                    <div class="form-group">
-                        <label class="col-md-4 control-label" for="txtPost">Photos</label>
-         
-                        <div class="input-group col-md-4">
-                            <span class="input-group-btn">
-                            <span class="btn btn-primary btn-file">
-                                Browse&hellip; <input type="file" id="fileupload" name="file" multiple>
-                            </span>
-                            </span>
-                            <input type="text" class="form-control" readonly>
-                        </div>
-                    </div>
-
-                    <!-- Textarea -->
-                    <div class="form-group">
-                        <label class="col-md-4 control-label" for="txtNotes">Description</label>
-                        <div class="col-md-4">
-                            <textarea class="form-control" id="txtDescription" name="inputDescription"></textarea>
-                        </div>
-                    </div>
-                    <!-- End Textarea --> 
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" id="btnUpdate" class="btn btn-primary">Update</button>
-            </div>
-        </div>
     </div>
-</div>
-
   </body>
 </html>

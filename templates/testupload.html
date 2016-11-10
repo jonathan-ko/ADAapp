@@ -25,7 +25,7 @@
               },
               success: function(response, status) {
                   console.log(response);
-                  $('#imgUpload').attr('src','upload/'+response.filename);
+                  $('#imgUpload').attr('src','../static/upload/'+response.filename);
               },
               error: function(error) {
                   console.log(error);
