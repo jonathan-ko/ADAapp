@@ -3,6 +3,7 @@ from flask import Flask, render_template, request, redirect, session, url_for, s
 import pymongo
 from pymongo import MongoClient
 import json
+from bson.json_util import dumps
 	
 from werkzeug import generate_password_hash, check_password_hash, secure_filename
 
@@ -40,10 +41,6 @@ def showSignUp():
 @app.route('/showSignin')
 def showSignin():
     return render_template('signin.html')
-
-@app.route('/showTestUpload')
-def testUpload():
-    return render_template('testUpload.html')
 
 @app.route('/getPlaces')
 def getPlaces():
@@ -103,7 +100,7 @@ def validateLogin():
         data = users.find_one({"email":username})
         if check_password_hash(data['hashed_password'],password):
             session['user'] = data['email']
-            return redirect('/dashboard')
+            return redirect('/testDash')
         else:
             return render_template('error.html',error = 'Wrong Email address or Password.') 
     except Exception as e:
@@ -160,7 +157,7 @@ def addPlaces():
         notes = request.form['inputNotes']
         web_address = request.form['inputWebAddress']
         places.insert_one({"dba": dba, "address":address, "city":city, "zipcode":zipcode, "notes":notes, "web_address": web_address, "case_ids":[], "client_ids":[], "contact_ids":[], "user_id":str(user_id)})
-        return redirect('/dashboard')
+        return redirect('/testDash')
     else:
         return redirect('signin.html')
 
@@ -186,17 +183,18 @@ def addContact():
         contact_type = request.form['inputContactType']
         print ({"last_name":last_name, "first_name":first_name, "address":address, "city":city, "zipcode":zipcode, "gender":gender, "notes":notes, "contact_type":contact_type, "case_info":[], "user_id":str(user_id)})
         contacts.insert_one({"last_name":last_name, "first_name":first_name, "address":address, "city":city, "zipcode":zipcode, "gender":gender, "notes":notes, "contact_type":contact_type, "case_info":[], "user_id":str(user_id)})
-        return redirect('/showContacts')
+        return redirect('/testDash')
     else:
         return redirect('signin.html')
 
-@app.route('/getClients',methods=['GET', 'POST'])
+@app.route('/getContacts',methods=['GET'])
 def getClient():
     if session.get('user'):
         email = session.get('user')
         user_obj=users.find_one({"email":email}) 
-        user_id=user_obj['_id']
-        user_contacts=contacts.find({"user_id":str(user_id)})
+        user_id=str(user_obj['_id'])
+        user_contacts=dumps(contacts.find({"user_id":user_id}))
+        print user_contacts
         return json.dumps({"data":user_contacts})
     else:
         return render_template('error.html', error = 'Unauthorized Access')

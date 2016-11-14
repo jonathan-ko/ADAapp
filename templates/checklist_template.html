@@ -84,17 +84,29 @@ $( function() {
 
 
 
-    <nav>
-        <ul class="nav nav-tabs">
-            <li role="presentation"><a href=""><strong>Checklists</strong></a></li>
-            <li role="presentation" class="active"><a href=""><strong>Checklist Name</strong></a></li>
+<div class="panel panel-primary">
 
+    <div class="panel-heading">
+        <h3 class="panel-title">Checklist Name</h3>
+    </div>
+
+<div class="panel-body">
+
+
+
+    <nav>
+        <ul class="nav nav-pills">
+            <li role="presentation"><a href="/checklists">Return to Dashboard <span class="glyphicon glyphicon-list-alt"></span></a></li>
+            <li role="presentation"><a data-toggle="modal" data-target="#addModal" aria-label="add">Add Item <span class="glyphicon glyphicon-plus"></span></a>
+            </li>
+            <li role="presentation"><a data-toggle="modal" data-target="#deleteModal" aria-label="delete">Delete Checklist <span class="glyphicon glyphicon-trash"></span></a></li>
         </ul>
     </nav>
 
 
-    <div class="col-md-12"> 
-        <div class="panel-body">
+<div class="well">
+
+
             <ol id="ulist" class="list-group">
     <li class="list-group-item">
   
@@ -178,19 +190,16 @@ $( function() {
 
     </li>
             </ol>
+
+</div>
+
         </div>
  
     </div>
 
 
-    <nav>
-        <ul class="nav nav-pills">
-            <li role="presentation"><a data-toggle="modal" data-target="#addModal" aria-label="add">Add Item <span class="glyphicon glyphicon-plus"></span></a>
-            </li>
-            <li role="presentation"><a href="/checklists">Return to Checklists <span class="glyphicon glyphicon-list-alt"></span></a></li>
-            <li role="presentation"><a data-toggle="modal" data-target="#deleteModal" aria-label="delete">Delete Checklist <span class="glyphicon glyphicon-trash"></span></a></li>
-        </ul>
-    </nav>
+
+</div><!--panel -->
 
 
 

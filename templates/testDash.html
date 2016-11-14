@@ -44,7 +44,9 @@
 
         $('#gender').change(function(){
             if ($('#gender').val() == 'I prefer to identify as...') {
-            $('#othergender').removeClass('hidden');
+            $('#othergender').removeClass('collapse');
+        } else {
+          $('#othergender').addClass('collapse');
         }
     });
 
@@ -86,31 +88,27 @@ $("<input/>",{type:'hidden',name:'inputContactType'}).val(selectedOption2).appen
 <script type="text/javascript">
    $(function() {
         $.ajax({
-            url: '/getTypes',
+            url: '/getContacts',
             type: 'GET',
             success: function(res) {
-                console.log(res);
-                var types = JSON.parse(res);
-                for (var i = types.length - 1; i >= 0; i--) {
-                    $('#contactType').append("<option>"+types[i]+"</option>");
+                //console.log(res);
+                var data = JSON.parse(res); 
+                var contacts = JSON.parse(data['data'])
+                console.log(contacts.length);
+                $('#tbl_contacts').append("<thead><tr><td>Last Name</td><td>First Name</td><td>Address</td><td>City</td><td>Zip code</td><td>Notes</td><td>Contact Type</td><td>Cases</td></tr></thead>");
+                $('#tbl_contacts').append("<tbody>");
+                for (var i = contacts.length - 1; i >= 0; i--) {
+                    var tbl_contact_row='<tr><td>'+contacts[i]["last_name"]+'</td><td>'+contacts[i]["first_name"]+'</td><td>'+contacts[i]["address"]+'</td><td>'+contacts[i]["city"]+'</td><td>'+contacts[i]["zip_code"]+'</td><td>'+contacts[i]["notes"]+'</td><td>'+contacts[i]["contact_type"]+'</td></tr>';
+                  $('#tbl_contacts').append(tbl_contact_row);
                 };
+                  $('#tbl_contacts').append("</tbody>");
             },
             error: function(error) {
                 console.log(error);
             }
         });
 
-        $('#gender').change(function(){
-            if ($('#gender').val() == 'I prefer to identify as...') {
-            $('#othergender').removeClass('collapse');
-        }
-    });
 
-var selectedOption = $("#gender option:selected").text();
-$("<input/>",{type:'hidden',name:'inputGender'}).val(selectedOption).appendTo("form");
-
-var selectedOption2 = $("#contactType option:selected").text();
-$("<input/>",{type:'hidden',name:'inputContactType'}).val(selectedOption2).appendTo("form");
 
     });
 </script>
@@ -203,16 +201,16 @@ $("<input/>",{type:'hidden',name:'inputContactType'}).val(selectedOption2).appen
 
           <div class="row placeholders">
             <div class="col-xs-6 col-sm-3 placeholder">
-              <a href="/clients" style="color:#000000"><img src="../static/cases.jpg" width="200" height="200" class="img-fluid" alt="Generic placeholder thumbnail">
-              <h4>Cases</h4></a>
-            </div>
-            <div class="col-xs-6 col-sm-3 placeholder">
               <a href="/getClients" style="color:#000000"><img src="../static/clients.png" width="200" height="200" class="img-fluid" alt="Generic placeholder thumbnail">
               <h4>Contacts</h4></a>
             </div>
             <div class="col-xs-6 col-sm-3 placeholder">
               <a href="/getPlaces" style="color:#000000"><img src="../static/places.png" width="200" height="200" class="img-fluid" alt="Generic placeholder thumbnail">
               <h4>Places</h4></a>
+            </div>
+            <div class="col-xs-6 col-sm-3 placeholder">
+              <a href="/clients" style="color:#000000"><img src="../static/cases.jpg" width="200" height="200" class="img-fluid" alt="Generic placeholder thumbnail">
+              <h4>Cases</h4></a>
             </div>
             <div class="col-xs-6 col-sm-3 placeholder">
               <a href="/checklists" style="color:#000000"><img src="../static/checklist.jpg" width="200" height="200" class="img-fluid" alt="Generic placeholder thumbnail">
@@ -229,7 +227,7 @@ $("<input/>",{type:'hidden',name:'inputContactType'}).val(selectedOption2).appen
             <legend>Contacts</legend>
           <hr>   
            <div class="table-responsive">
-            <table id="tbl_clients"          
+            <table id="tbl_contacts"          
             class="table table-striped">
             </table>  
           </div>
@@ -456,16 +454,157 @@ $("<input/>",{type:'hidden',name:'inputContactType'}).val(selectedOption2).appen
         <div class="panel-body">
 
 
+        <section>
+
+                  <div class="header">
+
+            <h3 class="text-muted">Make a Demand Letter/Complaint</h3>
+        </div>
+
+            <form class="form-horizontal" method="post" action="/makeDemand">
+                <fieldset>
+
+                    <!-- Form Name -->
+                    <legend>Add Client</legend>
+ 
+                    <!-- Text input-->
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="txtLastName">Last Name</label>
+                        <div class="col-md-4">
+                            <input id="txtLastName" name="inputLastName" type="text" class="form-control input-md">
+                        </div>
+                    </div>
+                     <div class="form-group">
+                        <label class="col-md-4 control-label" for="txtFirstName">First Name</label>
+                        <div class="col-md-4">
+                            <input id="txtFirstName" name="inputFirstName" type="text" class="form-control input-md">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="txtAddress">Address</label>
+                        <div class="col-md-4">
+                            <input id="txtAddress" name="inputAddress" type="text" class="form-control input-md">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="txtCity">City</label>
+                        <div class="col-md-4">
+                            <input id="txtCity" name="inputCity" type="text" class="form-control input-md">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="txtZipCode">Zip Code</label>
+                        <div class="col-md-4">
+                            <input id="txtZipCode" name="inputZipCode" type="text" class="form-control input-md">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="offset-md-2">
+                    <label class="form-check-inline">
+                      <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> Male, prefers 'he, his, him'
+                    </label>
+                    <label class="form-check-inline">
+                      <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> Female prefers 'she, hers, her'
+                    </label>
+                    <label class="form-check-inline">
+                      <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3"> Prefers 'they, theirs, them'
+                    </label>
+                    </div>
+                </div>
+                                        <!-- Button -->
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="Clientbutton"></label>
+                        <div class="col-md-4">
+                            <input id="Clientbutton" name="Clientbutton" class="btn btn-primary" type="submit" value="Add Client" />
+                        </div>
+                    </div>
+
+                    <legend>Add Place of Public Accommodation</legend>
+ 
+
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="txtEmail">Place of Public Accommodation</label>
+                        <div class="col-md-4">
+                            <input id="PlofPA" name="PlofPA" type="text" class="form-control input-md">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="txtAddress">Address</label>
+                        <div class="col-md-4">
+                            <input id="txtAddress" name="inputAddress" type="text" class="form-control input-md">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="txtCity">City</label>
+                        <div class="col-md-4">
+                            <input id="txtCity" name="inputCity" type="text" class="form-control input-md">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="txtZipCode">Zip Code</label>
+                        <div class="col-md-4">
+                            <input id="txtZipCode" name="inputZipCode" type="text" class="form-control input-md">
+                        </div>
+                    </div>
+                    
+
+
+                                        <!-- Button -->
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="Placebutton"></label>
+                        <div class="col-md-4">
+                            <input id="Placebutton" name="Placebutton" class="btn btn-primary" type="submit" value="Add Place" />
+                        </div>
+                    </div>
+
+                    <legend>Type(s) of ADA Violation(s)</legend>
+
+                <div class="form-group">
+                    <div class="offset-md-4">
+                <div class="form-check">
+                  <label class="form-check-label">
+                    <input class="form-check-input" type="checkbox" value="">
+                    Entrance
+                  </label>
+                </div>
+                <div class="form-check">
+                  <label class="form-check-label">
+                    <input class="form-check-input" type="checkbox" value="">
+                    Parking
+                  </label>
+                </div>
+                <div class="form-check">
+                  <label class="form-check-label">
+                    <input class="form-check-input" type="checkbox" value="">
+                    Approach 
+                  </label>
+                </div>
+
+
+                </div>
+            </div>
+
+                                        <!-- Button -->
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="singlebutton"></label>
+                        <div class="col-md-4">
+                            <input id="singlebutton" name="singlebutton" class="btn btn-primary" type="submit" value="Draft Demand" />
+                        </div>
+                    </div>
+
+                </fieldset>
+            </form>
+ 
+        </section>
 
 
         </div>
       </div>
    
    </div>  <!-- ./panel -->
-  
-  </div>  <!-- ./panel-group -->
-
-
 
 
 <br>
@@ -481,7 +620,56 @@ $("<input/>",{type:'hidden',name:'inputContactType'}).val(selectedOption2).appen
           </section>
           <hr>       
 
-          
+  <!-- Panel 4 -->
+    <div class="panel panel-info">
+  
+      <div class="panel-heading">
+        <p class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#col4">Make a Checklist</a>
+        </p>
+      </div>
+    
+      <div id="col4" class="panel-collapse collapse">
+        <div class="panel-body">
+
+
+       <section>
+            <form class="form-horizontal" method="post" action="/addChecklist">
+                <fieldset>
+  
+                    <!-- Text input-->
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="txtChecklistName">Checklist Name</label>
+                        <div class="col-md-4">
+                            <input id="txtChecklistName" name="inputChecklistName" type="text" class="form-control input-md">
+                        </div>
+                    </div>
+
+                                        <!-- Button -->
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="Checklistbutton"></label>
+                        <div class="col-md-4">
+                            <input id="Checklistbutton" name="Checklistbutton" class="btn btn-primary" type="submit" value="Make Checklist" />
+                        </div>
+                    </div>
+
+                </fieldset>
+            </form>
+ 
+        </section>
+
+
+
+        </div>
+      </div>
+   
+   </div>  <!-- ./panel -->
+
+  
+  </div>  <!-- ./panel-group -->
+
+
+
 
         </div>
       </div>

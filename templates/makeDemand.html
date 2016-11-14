@@ -4,7 +4,7 @@
     <title>Clients</title>
  
     <!-- Bootstrap core CSS -->
-    <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../static/css/bootstrap.min.css" rel="stylesheet">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 
@@ -16,7 +16,59 @@
      
     <script type="text/javascript" src="../static/js/jquery.fileupload-jquery-ui.js"></script>
 
+<style type="text/css">
 
+.form-horizontal .radio,
+.form-horizontal .checkbox,
+.form-horizontal .radio-inline,
+.form-horizontal .checkbox-inline {
+  padding-top: 7px;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.form-horizontal .radio,
+.form-horizontal .checkbox {
+  min-height: 27px;
+}
+.form-horizontal .form-group {
+  margin-right: -15px;
+  margin-left: -15px;
+}
+@media (min-width: 768px) {
+  .form-horizontal .control-label {
+    padding-top: 7px;
+    margin-bottom: 0;
+    text-align: right;
+  }
+}
+.form-horizontal .has-feedback .form-control-feedback {
+  right: 15px;
+}
+@media (min-width: 768px) {
+  .form-horizontal .form-group-lg .control-label {
+    padding-top: 11px;
+    font-size: 18px;
+  }
+}
+@media (min-width: 768px) {
+  .form-horizontal .form-group-sm .control-label {
+    padding-top: 6px;
+    font-size: 12px;
+  }
+}
+
+.form-horizontal .form-group:before,
+.form-horizontal .form-group:after
+{
+  display: table;
+  content: " ";
+}
+
+.form-horizontal .form-group:after
+{
+  clear: both;
+}
+    </style>
   </head>
  
   <body>
@@ -66,6 +118,7 @@
                     </div>
 
                     <div class="form-group">
+                        <div class="offset-md-2">
                     <label class="form-check-inline">
                       <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> Male, prefers 'he, his, him'
                     </label>
@@ -76,6 +129,7 @@
                       <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3"> Prefers 'they, theirs, them'
                     </label>
                     </div>
+                </div>
                                         <!-- Button -->
                     <div class="form-group">
                         <label class="col-md-4 control-label" for="singlebutton"></label>
@@ -126,6 +180,7 @@
                     <legend>Type(s) of ADA Violation(s)</legend>
 
                 <div class="form-group">
+                    <div class="offset-md-4">
                 <div class="form-check">
                   <label class="form-check-label">
                     <input class="form-check-input" type="checkbox" value="">
@@ -139,6 +194,7 @@
                   </label>
                 </div>
                 </div>
+            </div>
 
 
 
