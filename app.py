@@ -42,10 +42,6 @@ def showSignUp():
 def showSignin():
     return render_template('signin.html')
 
-@app.route('/getPlaces')
-def getPlaces():
-    return render_template('addPlace.html')
-
 @app.route('/showClients')
 def getClientList():
     return render_template('clients.html')
@@ -172,6 +168,7 @@ def addContact():
         # read the posted values from the UI
         last_name = request.form['inputLastName']
         first_name = request.form['inputFirstName']
+        email_address = request.form['inputEmailAddress']
         address = request.form['inputAddress']
         city = request.form['inputCity']
         zipcode = request.form['inputZipCode']
@@ -181,8 +178,7 @@ def addContact():
             gender = request.form['inputGender']
         notes = request.form['inputNotes']
         contact_type = request.form['inputContactType']
-        print ({"last_name":last_name, "first_name":first_name, "address":address, "city":city, "zipcode":zipcode, "gender":gender, "notes":notes, "contact_type":contact_type, "case_info":[], "user_id":str(user_id)})
-        contacts.insert_one({"last_name":last_name, "first_name":first_name, "address":address, "city":city, "zipcode":zipcode, "gender":gender, "notes":notes, "contact_type":contact_type, "case_info":[], "user_id":str(user_id)})
+        contacts.insert_one({"last_name":last_name, "first_name":first_name, "email_address":email_address, "address":address, "city":city, "zipcode":zipcode, "gender":gender, "notes":notes, "contact_type":contact_type, "case_info":[], "user_id":str(user_id)})
         return redirect('/testDash')
     else:
         return redirect('signin.html')
@@ -194,8 +190,19 @@ def getClient():
         user_obj=users.find_one({"email":email}) 
         user_id=str(user_obj['_id'])
         user_contacts=dumps(contacts.find({"user_id":user_id}))
-        print user_contacts
+        #print user_contacts
         return json.dumps({"data":user_contacts})
+    else:
+        return render_template('error.html', error = 'Unauthorized Access')
+
+@app.route('/getPlaces',methods=['GET'])
+def getPlaces():
+    if session.get('user'):
+        email = session.get('user')
+        user_obj=users.find_one({"email":email}) 
+        user_id=str(user_obj['_id'])
+        user_places = dumps(places.find({"user_id":user_id}))
+        return json.dumps({"data":user_places})
     else:
         return render_template('error.html', error = 'Unauthorized Access')
 

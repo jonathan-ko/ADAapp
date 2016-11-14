@@ -61,29 +61,6 @@ $("<input/>",{type:'hidden',name:'inputContactType'}).val(selectedOption2).appen
 </script>
 
 
-    <!--script>
-
-    $(function() {
-        $.ajax({
-            url: '/getClients',
-            type: 'GET',
-            success: function(res) {
-                console.log(res);
-                var clients = JSON.parse(res);
-                $('#tbl_clients').append("<thead><tr><td>Last Name</td><td>First Name</td><td>Address</td><td>City</td><td>Zip code</td><td>Case Status</td><td>Case Type</td><td>Email</td><td>Notes</td></tr></thead>");
-                $('#tbl_clients').append("<tbody>");
-                clients.forEach(function(client){s
-                 var tbl_client_row='<tr><td>'+client["client_LastName"]+'</td><td>'+client["client_FirstName"]+'</td><td>'+client["client_Address"]+'</td><td>'+client["client_City"]+'</td><td>'+client["client_Zipcode"]+'</td><td>'+client["client_caseStatus"]+'</td><td>'+client["client_caseType"]+'</td><td>'+client["client_email"]+'</td><td>'+client["client_Notes"]+'</td></tr>';
-                  $('#tbl_clients').append(tbl_client_row);
-                  $('#tbl_clients').append("</tbody>");
-                });
-            },
-            error: function(error) {
-                console.log(error);
-            }
-        });
-    });
-</script-->
 
 <script type="text/javascript">
    $(function() {
@@ -94,11 +71,13 @@ $("<input/>",{type:'hidden',name:'inputContactType'}).val(selectedOption2).appen
                 //console.log(res);
                 var data = JSON.parse(res); 
                 var contacts = JSON.parse(data['data'])
-                console.log(contacts.length);
+                //var email = JSON.parse(email['email'])
+                console.log(contacts);
+                console.log(data);
                 $('#tbl_contacts').append("<thead><tr><td>Last Name</td><td>First Name</td><td>Address</td><td>City</td><td>Zip code</td><td>Notes</td><td>Contact Type</td><td>Cases</td></tr></thead>");
                 $('#tbl_contacts').append("<tbody>");
                 for (var i = contacts.length - 1; i >= 0; i--) {
-                    var tbl_contact_row='<tr><td>'+contacts[i]["last_name"]+'</td><td>'+contacts[i]["first_name"]+'</td><td>'+contacts[i]["address"]+'</td><td>'+contacts[i]["city"]+'</td><td>'+contacts[i]["zip_code"]+'</td><td>'+contacts[i]["notes"]+'</td><td>'+contacts[i]["contact_type"]+'</td></tr>';
+                    var tbl_contact_row='<tr><td>'+contacts[i]["last_name"]+'</td><td>'+contacts[i]["first_name"]+'</td><td>'+contacts[i]["address"]+'</td><td>'+contacts[i]["city"]+'</td><td>'+contacts[i]["zipcode"]+'</td><td>'+contacts[i]["notes"]+'</td><td>'+contacts[i]["contact_type"]+'</td></tr>';
                   $('#tbl_contacts').append(tbl_contact_row);
                 };
                   $('#tbl_contacts').append("</tbody>");
@@ -108,7 +87,26 @@ $("<input/>",{type:'hidden',name:'inputContactType'}).val(selectedOption2).appen
             }
         });
 
-
+        $.ajax({
+            url: '/getPlaces',
+            type: 'GET',
+            success: function(res) {
+                //console.log(res);
+                var data = JSON.parse(res); 
+                var places = JSON.parse(data['data'])
+                console.log(places);
+                $('#tbl_places').append("<thead><tr><td>Business Name</td><td>Address</td><td>City</td><td>Zip code</td><td>Notes</td><td>Web Address</td><td>Cases</td></tr></thead>");
+                $('#tbl_places').append("<tbody>");
+                for (var i = places.length - 1; i >= 0; i--) {
+                    var tbl_places_row='<tr><td>'+places[i]["dba"]+'</td><td>'+places[i]["address"]+'</td><td>'+places[i]["city"]+'</td><td>'+places[i]["zipcode"]+'</td><td>'+places[i]["notes"]+'</td><td>'+places[i]["web_address"]+'</td></tr>';
+                  $('#tbl_places').append(tbl_places_row);
+                };
+                  $('#tbl_places').append("</tbody>");
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
 
     });
 </script>
@@ -271,6 +269,7 @@ $("<input/>",{type:'hidden',name:'inputContactType'}).val(selectedOption2).appen
                             <input id="txtAddress" name="inputAddress" type="text" class="form-control input-md">
                         </div>
                     </div>
+
                     <div class="form-group">
                         <label class="col-md-4 control-label" for="txtCity">City</label>
                         <div class="col-md-4">
@@ -284,11 +283,16 @@ $("<input/>",{type:'hidden',name:'inputContactType'}).val(selectedOption2).appen
                             <input id="txtZipCode" name="inputZipCode" type="text" class="form-control input-md">
                         </div>
                     </div>
-                    
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="txtEmailAddress">Email Address</label>
+                        <div class="col-md-4">
+                            <input id="txtEmailAddress" name="inputEmailAddress" type="text" class="form-control input-md">
+                        </div>
+                    </div>                    
                     <div class="form-group">
                         <label class="col-md-4 control-label" for="gender">Gender</label>
                         <div class="col-md-4 col-sm-3" >
-                        <select class ="form-control" id="gender" name="gender">
+                        <select class ="form-control" id="gender" name="inputGender">
                             <option>Male</option>
                             <option>Female</option>
                             <option>I prefer to identify as...</option>
@@ -310,7 +314,7 @@ $("<input/>",{type:'hidden',name:'inputContactType'}).val(selectedOption2).appen
                     <div class="form-group">
                         <label class="col-md-4 control-label" for="contactType">Contact Type</label>
                         <div class="col-md-4 col-sm-3" >
-                        <select class ="form-control" id="contactType">
+                        <select class ="form-control" id="contactType" name ="inputContactType">
                         </select>
                         </div>
                     </div>
