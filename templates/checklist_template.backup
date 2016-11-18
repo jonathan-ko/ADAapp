@@ -33,16 +33,11 @@ $( function() {
             },
             success: function(response, status) {
                 console.log(response);
-                $('#browseInput').addClass('hidden');
-                $('#imgUpload').attr('src','../static/upload/'+response.filename).removeClass('hidden');
-                $('#filePath').attr('value',response.filename);
             },
             error: function(error) {
                 console.log(error);
             }
         });
-
-
     })
 
 </script>
@@ -112,53 +107,65 @@ $( function() {
 <div class="well">
 
 
-    <ol id="ulist" class="list-group">
-        <li class="list-group-item">
+            <ol id="ulist" class="list-group">
+    <li class="list-group-item">
+  
             <label>
                 <h3>Approach and Entrance </h3>
             </label>
+      
         <div class="pull-right action-buttons">
             <a data-toggle="modal" data-target="#editModal"><span class="glyphicon glyphicon-remove"></span></a>
         </div>
-    <div class="row">
+               
+<div class="row">
+
         <p class="col-md-3">
             Is there at least one route from site arrival points (parking, passenger loading zones, public sidewalks and public transportation stops) that does not require the use of stairs?
+
         
         [See 2010 ADA Standards for Accessible Design – 206.2.1]
         </p>
-        <img class="col-md-3 col-sm-12 col-xs-12 hidden" height="200" width="300" src="">
+
+        <img class="col-md-3 hidden" height="200" width="300" src="">
 
     <div class="form-group col-md-3">
         <label class="control-label">Does this measurement conform to ADA Standards?</label><br>
         <div>                        
-            <input name="conforms" type="checkbox" value = "true"> Yes
-            <input name="conforms" type="checkbox" value = "false"> No 
+        <input name="done" type="checkbox"> Yes
+        <input name="done" type="checkbox"> No 
         </div>
     </div>
 
         <div class="form-group col-md-3">
-            <label class="control-label">Measurement:</label><br>
-            <input id="measurement" class="form-control" name ="measurements"></input><br>
-            <label class="control-label">Notes:</label><br>
-            <textarea></textarea>
+             <label class="control-label">Measurement:</label><br>
+    <input id="measurement" class="form-control"></input><br>
+     <label class="control-label">Notes:</label><br>
+        <textarea></textarea>
         </div>
 
-    </div> <!--row-->
-        </li>
+</div>
+    </li>
 
 
-        <li class="list-group-item">
+     <li draggable="true" class="list-group-item" data-value="data2">
+
             <label>
                 <h3>Exterior Accessible Route </h3> 
             </label>
+
         <div class="pull-right action-buttons">
             <a data-toggle="modal" data-target="#editModal"><span class="glyphicon glyphicon-remove"></span></a>
+            
         </div>
-    <div class="row">
+
+<div class="row">
 
         <p class="col-md-3">
             Is the route at least 36 inches wide?
-            [See 2010 ADA Standards for Accessible Design – 403.5.1]
+[See 2010 ADA Standards for Accessible Design – 403.5.1]
+
+
         </p>
 
         <img class="col-md-3 col-sm-12 col-xs-12" src="../static/ApproachandEntrance.png">
@@ -182,40 +189,6 @@ $( function() {
 </div>
 
     </li>
-
-        <li class="list-group-item">
-            <label>
-                <h3>{{Title}}</h3>
-            </label>
-        <div class="pull-right action-buttons">
-            <a data-toggle="modal" data-target="#editModal"><span class="glyphicon glyphicon-remove"></span></a>
-        </div>
-    <div class="row">
-        <p class="col-md-3">
-            {{Description}}
-        
-        [See 2010 ADA Standards for Accessible Design – {{ADA_standard}}]
-        </p>
-        <img class="col-md-3 col-sm-12 col-xs-12" height="200" width="300" src="../static/upload/{{filePath}}">
-
-    <div class="form-group col-md-3">
-        <label class="control-label">Does this measurement conform to ADA Standards?</label><br>
-        <div>                        
-            <input name="conforms" type="checkbox" value = "true"> Yes
-            <input name="conforms" type="checkbox" value = "false"> No 
-        </div>
-    </div>
-
-        <div class="form-group col-md-3">
-            <label class="control-label">Measurement:</label><br>
-            <input id="measurement" class="form-control" name ="measurements"></input><br>
-            <label class="control-label">Notes:</label><br>
-            <textarea></textarea>
-        </div>
-
-    </div> <!--row-->
-        </li>
-         {% block li %}{% endblock %}
             </ol>
 
 </div>
@@ -239,10 +212,10 @@ $( function() {
                 <h4 class="modal-title" id="editModalLabel">Add Item</h4>
             </div>
             <div class="modal-body">
-                <form role="form" method="post" action="/addItem">
+                <form role="form">
                     <div class="form-group">
-                        <label for="standardNum" class="control-label">Standard number</label>
-                        <input type="text" class="form-control" id="standardNum" name ="standardNum">
+                        <label for="recipient-name" class="control-label">Standard</label>
+                        <input type="text" class="form-control" id="editTitle">
                     </div>
  
                     <!-- Text input-->
@@ -260,30 +233,24 @@ $( function() {
                                 Browse&hellip; <input type="file" id="fileupload" name="file" multiple>
                             </span>
                             </span>
-                            <input id="browseInput" type="text" class="form-control" readonly>          
-                            <div class="pull-right">
-                                <img id="imgUpload" style="width: 140px; height: 140px;" class="img-thumbnail hidden"><input type="hidden" name="filePath" id="filePath"></input>
-                            </div>
+                            <input type="text" class="form-control" readonly>
                         </div>
                     </div>
 
                     <!-- Textarea -->
                     <div class="form-group">
-                        <label class="control-label" for="txtDescription">Description</label>
+                        <label class="control-label" for="txtNotes">Description</label>
                         <div>
                             <textarea class="form-control" id="txtDescription" name="inputDescription"></textarea>
                         </div>
                     </div>
                     <!-- End Textarea --> 
-
-                    <input class ="hidden" id="checklist_name" name="checklist_name" value="{{checklist_name}}"/>
-
+                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <input id="addItembutton" name="addItembutton" class="btn btn-primary" type="submit" value="Add Item" />
+                <button type="button" id="btnUpdate" class="btn btn-primary">Update</button>
             </div>
-                </form>            
         </div>
     </div>
 </div>

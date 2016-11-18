@@ -1,7 +1,9 @@
+{% extends "checklist_template.html" %}
+{% block li %}
     <li class="list-group-item">
   
         <label>
-            <h3>{{Item Name}}</h3>
+            <h3>{{Title}} from item_template </h3>
         </label>
       
         <div class="pull-right action-buttons">
@@ -11,28 +13,29 @@
         <div class="row">
 
         <p class="col-md-3">
-            {{Item Description}}
+            {{Description}}
 
         
-        [See 2010 ADA Standards for Accessible Design – {{ADA Standard}}]
+        [See 2010 ADA Standards for Accessible Design – {{ADA_standard}}]
         </p>
 
-        <img class="col-md-3 hidden" height="200" width="300" src="">
+        <img class="col-md-3 hidden" height="200" width="300" src="../static/upload/{{filePath}}">
 
         <div class="form-group col-md-3">
             <label class="control-label">Does this measurement conform to ADA Standards?</label><br>
             <div>                        
-            <input name="standardNum{{ADA Standard}}" type="checkbox"> Yes
-            <input name="standardNum{{ADA Standard}}" type="checkbox"> No 
+            <input name="standardNum{{ADA_standard}}" type="checkbox"> Yes
+            <input name="standardNum{{ADA_standard}}" type="checkbox"> No 
             </div>
         </div>
 
         <div class="form-group col-md-3">
             <label class="control-label">Measurement:</label><br>
-            <input id="measurementFor{{ADA Standard}}" class="form-control"></input><br>
+            <input id="measurementFor{{ADA_standard}}" class="form-control"></input><br>
             <label class="control-label">Notes:</label><br>
-            <textarea id="notesFor{{ADA Standard}}"></textarea>
+            <textarea id="notesFor{{ADA_standard}}"></textarea>
         </div>
 
         </div> <!--row -->
     </li>
+{% endblock %}

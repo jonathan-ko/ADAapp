@@ -18,6 +18,8 @@ access = db.access
 places = db.places
 types = db.types
 checklists = db.checklists
+ADA_items = db.ADA_items
+
 
 app.secret_key = 'why would I tell you my secret key?'
 # This is the path to the upload directory
@@ -210,6 +212,40 @@ def getPlaces():
 def getTypes():
     return json.dumps(types.find()[0]['contact_types'])
 
+@app.route('/addChecklist',methods=['POST'])
+def addChecklist():
+    if session.get('user'):
+        email = session.get('user')
+        user_obj=users.find_one({"email":email}) 
+        user_id=str(user_obj['_id'])
+        checklist_name = request.form['inputChecklistName']
+        checklist_id=checklists.insert_one({"user_id":user_id, "case_id":"", "place_id":"", "checklist_name":checklist_name, "checklist_items":[]})
+        return render_template('checklist_template.html', checklist_name = checklist_name)
+    else:
+        return render_template('error.html', error = 'Unauthorized Access')
+
+@app.route('/addItem',methods=['POST'])
+def addItem():
+    if session.get('user'):
+        email = session.get('user')
+        user_obj=users.find_one({"email":email}) 
+        user_id=str(user_obj['_id'])
+        checklist_name = request.form['checklist_name']
+        ADA_standard = request.form['standardNum']
+        Title = request.form['inputCategoryName']
+        Description = request.form['inputDescription']
+        filePath = request.form['filePath']
+        inserted_item_id = ADA_items.insert_one({"ADA_standard":ADA_standard, "Title":Title, "Description":Description, "filePath":filePath})
+        #Standard_Met = request.form['conforms']
+        #Measurement =request.form['measurement']
+        checklists.find_one_and_update({"checklist_name":checklist_name}, {'$push': {"checklist_items": {"ADA_standard":ADA_standard, "Title":Title, "Description":Description, "FilePath":filePath}}})
+        return render_template('checklist_template.html', checklist_name = checklist_name, ADA_standard = ADA_standard, Title = Title, Description = Description, filePath = filePath)
+    else:
+        return render_template('error.html', error = 'Unauthorized Access')
+
+@app.route('/showTest')
+def showTest():
+    return render_template('item_template.html')
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0')
