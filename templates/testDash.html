@@ -56,6 +56,8 @@ $("<input/>",{type:'hidden',name:'inputGender'}).val(selectedOption).appendTo("f
 var selectedOption2 = $("#contactType option:selected").text();
 $("<input/>",{type:'hidden',name:'inputContactType'}).val(selectedOption2).appendTo("form");
 
+
+
     });
 
 </script>
@@ -73,7 +75,6 @@ $("<input/>",{type:'hidden',name:'inputContactType'}).val(selectedOption2).appen
                 var contacts = JSON.parse(data['data'])
                 //var email = JSON.parse(email['email'])
                 console.log(contacts);
-                console.log(data);
                 $('#tbl_contacts').append("<thead><tr><td>Last Name</td><td>First Name</td><td>Address</td><td>City</td><td>Zip code</td><td>Notes</td><td>Contact Type</td><td>Cases</td></tr></thead>");
                 $('#tbl_contacts').append("<tbody>");
                 for (var i = contacts.length - 1; i >= 0; i--) {
@@ -108,10 +109,38 @@ $("<input/>",{type:'hidden',name:'inputContactType'}).val(selectedOption2).appen
             }
         });
 
+
+                $.ajax({
+            url: '/getChecklists',
+            type: 'GET',
+            success: function(res) {
+                console.log(res);
+                var data = JSON.parse(res); 
+                for (var i = data.length - 1; i >= 0; i--) {
+                  var k = Object.keys(data[i]);
+                  $('#checklists').append('<li onclick="var chklst=this.children[0].innerHTML; var input=document.getElementById(&#34;chklst&#34;); input.value=chklst; console.log(chklst); var frm=document.forms[&#34;editChecklist&#34;]; frm.submit();" class="list-group-item"><label>'+k+'</label><svg class="pencil" xmlns="http://www.w3.org/2000/svg" width="14" height="16" viewBox="0 0 14 16"><path style="fill: #767f8e" fill-rule="evenodd" d="M0 12v3h3l8-8-3-3-8 8zm3 2H1v-2h1v1h1v1zm10.3-9.3L12 6 9 3l1.3-1.3a.996.996 0 0 1 1.41 0l1.59 1.59c.39.39.39 1.02 0 1.41z"/></svg></li>');
+                };
+
+                
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+
+
+            
     });
+
+
 </script>
 
 <style type="text/css">
+
+.pencil {
+  position: absolute;
+  right: 20px;
+}
 
 .form-horizontal .radio,
 .form-horizontal .checkbox,
@@ -616,11 +645,10 @@ $("<input/>",{type:'hidden',name:'inputContactType'}).val(selectedOption2).appen
 
           <section>
             <legend>Checklists</legend>
-           <div class="table-responsive">
-            <table id="tbl_checklists"          
-            class="table table-striped">
-            </table>  
-          </div>
+            <form id="editChecklist" action="/showTest" method="post">
+           <ol id="checklists" class="list-group"></ol>
+           <input type="hidden" id="chklst" name="chklst" />
+           </form>
           </section>
           <hr>       
 

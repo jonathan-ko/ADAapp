@@ -52,11 +52,6 @@ def getClientList():
 def getContact():
     return render_template('addContact.html')
 
-@app.route("/checklists")
-def getChecklists():
-    checklist_names=checklists.find()[1]
-    return render_template('getChecklists.html', checklist_names)
-
 @app.route("/testDash")
 def testDash():
     return render_template('testDash.html')
@@ -243,9 +238,27 @@ def addItem():
     else:
         return render_template('error.html', error = 'Unauthorized Access')
 
-@app.route('/showTest')
+@app.route('/showTest',methods=['GET','POST'])
 def showTest():
-    return render_template('item_template.html')
+    d = request.form
+    print d
+    #c = chklst=checklists.find_one({"checklist_name":d})
+    #print c
+    return render_template('checklist_template.html')
+
+@app.route('/showChecklist',methods=['GET','POST'])
+def showChecklist():
+    return render_template('checklist_template.html')
+
+@app.route('/getChecklists')
+def getChecklists():
+    checklist_names=[]
+    checklist_cursor = checklists.find({})
+    for c in checklist_cursor:
+        checklist_names.append({c['checklist_name']:c['checklist_items']})
+    print checklist_names
+    return json.dumps(checklist_names)
+
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0')

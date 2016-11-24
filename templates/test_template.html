@@ -1,12 +1,318 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <title>Checklists</title>
+ 
+   <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet"> 
+   <link href="../static/css/jquery-ui.css" rel="stylesheet">
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="http://getbootstrap.com/dist/js/bootstrap.min.js"></script>
+    <script src="../static/js/jquery-ui.js"></script>
+    <script type="text/javascript" src="../static/js/jquery.fileupload.js"></script>
+    <script type="text/javascript" src="../static/js/jquery.fileupload-process.js"></script>
+    <script type="text/javascript" src="../static/js/jquery-ui.js"></script>
+
+<script type="text/javascript">
+
+$( function() {
+    $( "ol" ).sortable();
+  });
+
+</script>
+
+
+<script type="text/javascript">
+
+    $(function() {
+        $('#fileupload').fileupload({
+            url: 'upload',
+            dataType: 'json',
+            add: function(e, data) {
+                data.submit();
+            },
+            success: function(response, status) {
+                console.log(response);
+                $('#browseInput').addClass('hidden');
+                $('#imgUpload').attr('src','../static/upload/'+response.filename).removeClass('hidden');
+                $('#filePath').attr('value',response.filename);
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+
+
+    })
+
+</script>
+
+
+
+<style>
+    .panel-body {
+        display: inline-block;
+        margin: 0px;
+    }
+    .list-group {
+        margin-bottom: 0px;
+    }
+</style>
+        <style>
+        .btn-file {
+            position: relative;
+            overflow: hidden;
+        }
+         
+        .btn-file input[type=file] {
+            position: absolute;
+            top: 0;
+            right: 0;
+            min-width: 100%;
+            min-height: 100%;
+            font-size: 100px;
+            text-align: right;
+            filter: alpha(opacity=0);
+            opacity: 0;
+            outline: none;
+            background: white;
+            cursor: inherit;
+            display: block;
+        }
+    </style>
+ 
   </head>
  
   <body>
-  	<ul>
-  		{% include 'item_template.html' %}
-  	</ul>
+<br>
+<div class="container">
+
+
+
+<div class="panel panel-primary">
+
+    <div class="panel-heading">
+        <h3 class="panel-title">{{checklist_name}}</h3>
+    </div>
+
+<div class="panel-body">
+
+
+
+    <nav>
+        <ul class="nav nav-pills">
+            <li role="presentation"><a href="/checklists">Return to Dashboard <span class="glyphicon glyphicon-list-alt"></span></a></li>
+            <li role="presentation"><a data-toggle="modal" data-target="#addModal" aria-label="add">Add Item <span class="glyphicon glyphicon-plus"></span></a>
+            </li>
+            <li role="presentation"><a data-toggle="modal" data-target="#deleteModal" aria-label="delete">Delete Checklist <span class="glyphicon glyphicon-trash"></span></a></li>
+        </ul>
+    </nav>
+
+
+<div class="well">
+
+
+    <ol id="ulist" class="list-group">
+        <li class="list-group-item">
+            <label>
+                <h3>Approach and Entrance </h3>
+            </label>
+        <div class="pull-right action-buttons">
+            <a data-toggle="modal" data-target="#editModal"><span class="glyphicon glyphicon-remove"></span></a>
+        </div>
+    <div class="row">
+        <p class="col-md-3">
+            Is there at least one route from site arrival points (parking, passenger loading zones, public sidewalks and public transportation stops) that does not require the use of stairs?
+        
+        [See 2010 ADA Standards for Accessible Design – 206.2.1]
+        </p>
+        <img class="col-md-3 col-sm-12 col-xs-12 hidden" height="200" width="300" src="">
+
+    <div class="form-group col-md-3">
+        <label class="control-label">Does this measurement conform to ADA Standards?</label><br>
+        <div>                        
+            <input name="conforms" type="checkbox" value = "true"> Yes
+            <input name="conforms" type="checkbox" value = "false"> No 
+        </div>
+    </div>
+
+        <div class="form-group col-md-3">
+            <label class="control-label">Measurement:</label><br>
+            <input id="measurement" class="form-control" name ="measurements"></input><br>
+            <label class="control-label">Notes:</label><br>
+            <textarea></textarea>
+        </div>
+
+    </div> <!--row-->
+        </li>
+
+
+        <li class="list-group-item">
+            <label>
+                <h3>Exterior Accessible Route </h3> 
+            </label>
+        <div class="pull-right action-buttons">
+            <a data-toggle="modal" data-target="#editModal"><span class="glyphicon glyphicon-remove"></span></a>
+        </div>
+    <div class="row">
+
+        <p class="col-md-3">
+            Is the route at least 36 inches wide?
+            [See 2010 ADA Standards for Accessible Design – 403.5.1]
+        </p>
+
+        <img class="col-md-3 col-sm-12 col-xs-12" src="../static/ApproachandEntrance.png">
+
+    <div class="form-group col-md-3">
+        <label class="control-label">Does this measurement conform to ADA Standards?</label><br>
+        <div>                        
+        <input name="done" type="checkbox"> Yes
+        <input name="done" type="checkbox"> No 
+        </div>
+    </div>
+    
+
+        <div class="form-group col-md-3">
+             <label class="control-label">Measurement:</label><br>
+    <input id="measurement" class="form-control"></input><br>
+     <label class="control-label">Notes:</label><br>
+        <textarea></textarea>
+        </div>
+
+</div>
+
+    </li>
+         {% macro li(Title, ADA_standard, Description, filePath='') -%}
+        <li class="list-group-item">
+            <label>
+                <h3>{{Title}}</h3>
+            </label>
+        <div class="pull-right action-buttons">
+            <a data-toggle="modal" data-target="#editModal"><span class="glyphicon glyphicon-remove"></span></a>
+        </div>
+    <div class="row">
+        <p class="col-md-3">
+            {{Description}}
+        
+        [See 2010 ADA Standards for Accessible Design – {{ADA_standard}}]
+        </p>
+        <img class="col-md-3 col-sm-12 col-xs-12" height="200" width="300" src="../static/upload/{{filePath}}">
+
+    <div class="form-group col-md-3">
+        <label class="control-label">Does this measurement conform to ADA Standards?</label><br>
+        <div>                        
+            <input name="conforms" type="checkbox" value = "true"> Yes
+            <input name="conforms" type="checkbox" value = "false"> No 
+        </div>
+    </div>
+
+        <div class="form-group col-md-3">
+            <label class="control-label">Measurement:</label><br>
+            <input id="measurement" class="form-control" name ="measurements"></input><br>
+            <label class="control-label">Notes:</label><br>
+            <textarea></textarea>
+        </div>
+
+    </div> <!--row-->
+        </li>
+{%- endmacro %}
+{{ li(Title, ADA_standard, Description, filePath) }}
+            </ol>
+
+</div>
+
+        </div>
+ 
+    </div>
+
+
+
+</div><!--panel -->
+
+
+
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="editModalLabel">Add Item</h4>
+            </div>
+            <div class="modal-body">
+                <form role="form" method="post" action="/addItem">
+                    <div class="form-group">
+                        <label for="standardNum" class="control-label">Standard number</label>
+                        <input type="text" class="form-control" id="standardNum" name ="standardNum">
+                    </div>
+ 
+                    <!-- Text input-->
+                    <div class="form-group">
+                        <label class="control-label" for="txtCategoryName">Category Title</label>
+                        <input id="txtCategoryName" name="inputCategoryName" type="text" class="form-control input-md">i.e. Approach, Parking 
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label" for="txtPost">Photos</label>
+         
+                        <div class="input-group">
+                            <span class="input-group-btn">
+                            <span class="btn btn-primary btn-file">
+                                Browse&hellip; <input type="file" id="fileupload" name="file" multiple>
+                            </span>
+                            </span>
+                            <input id="browseInput" type="text" class="form-control" readonly>          
+                            <div class="pull-right">
+                                <img id="imgUpload" style="width: 140px; height: 140px;" class="img-thumbnail hidden"><input type="hidden" name="filePath" id="filePath"></input>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Textarea -->
+                    <div class="form-group">
+                        <label class="control-label" for="txtDescription">Description</label>
+                        <div>
+                            <textarea class="form-control" id="txtDescription" name="inputDescription"></textarea>
+                        </div>
+                    </div>
+                    <!-- End Textarea --> 
+
+                    <input class ="hidden" id="checklist_name" name="checklist_name" value="{{checklist_name}}"/>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <input id="addItembutton" name="addItembutton" class="btn btn-primary" type="submit" value="Add Item" />
+            </div>
+                </form>            
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                </button>
+
+            </div>
+            <div class="modal-body">
+
+                <h4>Are you sure you want to delete this checklist?</h4>
+ 
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnDelete" class="btn btn-warning">Delete</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+
   </body>
 </html>
