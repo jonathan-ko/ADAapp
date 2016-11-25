@@ -234,17 +234,20 @@ def addItem():
         #Standard_Met = request.form['conforms']
         #Measurement =request.form['measurement']
         checklists.find_one_and_update({"checklist_name":checklist_name}, {'$push': {"checklist_items": {"ADA_standard":ADA_standard, "Title":Title, "Description":Description, "FilePath":filePath}}})
-        return render_template('checklist_template.html', checklist_name = checklist_name, ADA_standard = ADA_standard, Title = Title, Description = Description, filePath = filePath)
+        c = checklists.find_one({"checklist_name":d})
+        data=c['checklist_items']
+        return render_template('checklist_template.html', checklist_name = checklist_name, data=data)
     else:
         return render_template('error.html', error = 'Unauthorized Access')
 
 @app.route('/showTest',methods=['GET','POST'])
 def showTest():
-    d = request.form
+    d = request.form.getlist('chklst').pop()
     print d
-    #c = chklst=checklists.find_one({"checklist_name":d})
-    #print c
-    return render_template('checklist_template.html')
+    c = checklists.find_one({"checklist_name":d})
+    print c
+    data=c['checklist_items']
+    return render_template('checklist_template.html',data=data,checklist_name=d)
 
 @app.route('/showChecklist',methods=['GET','POST'])
 def showChecklist():

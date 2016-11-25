@@ -113,90 +113,22 @@ $( function() {
 
     <p>{{ data }}</p>
     <ol id="ulist" class="list-group">
+
+{% for d in data %}
         <li class="list-group-item">
             <label>
-                <h3>Approach and Entrance </h3>
+                <h3>{{d.Title}}</h3>
             </label>
         <div class="pull-right action-buttons">
             <a data-toggle="modal" data-target="#editModal"><span class="glyphicon glyphicon-remove"></span></a>
         </div>
     <div class="row">
         <p class="col-md-3">
-            Is there at least one route from site arrival points (parking, passenger loading zones, public sidewalks and public transportation stops) that does not require the use of stairs?
+            {{d.Description}}
         
-        [See 2010 ADA Standards for Accessible Design – 206.2.1]
+        [See 2010 ADA Standards for Accessible Design – {{d.ADA_standard}}]
         </p>
-        <img class="col-md-3 col-sm-12 col-xs-12 hidden" height="200" width="300" src="">
-
-    <div class="form-group col-md-3">
-        <label class="control-label">Does this measurement conform to ADA Standards?</label><br>
-        <div>                        
-            <input name="conforms" type="checkbox" value = "true"> Yes
-            <input name="conforms" type="checkbox" value = "false"> No 
-        </div>
-    </div>
-
-        <div class="form-group col-md-3">
-            <label class="control-label">Measurement:</label><br>
-            <input id="measurement" class="form-control" name ="measurements"></input><br>
-            <label class="control-label">Notes:</label><br>
-            <textarea></textarea>
-        </div>
-
-    </div> <!--row-->
-        </li>
-
-
-        <li class="list-group-item">
-            <label>
-                <h3>Exterior Accessible Route </h3> 
-            </label>
-        <div class="pull-right action-buttons">
-            <a data-toggle="modal" data-target="#editModal"><span class="glyphicon glyphicon-remove"></span></a>
-        </div>
-    <div class="row">
-
-        <p class="col-md-3">
-            Is the route at least 36 inches wide?
-            [See 2010 ADA Standards for Accessible Design – 403.5.1]
-        </p>
-
-        <img class="col-md-3 col-sm-12 col-xs-12" src="../static/ApproachandEntrance.png">
-
-    <div class="form-group col-md-3">
-        <label class="control-label">Does this measurement conform to ADA Standards?</label><br>
-        <div>                        
-        <input name="done" type="checkbox"> Yes
-        <input name="done" type="checkbox"> No 
-        </div>
-    </div>
-    
-
-        <div class="form-group col-md-3">
-             <label class="control-label">Measurement:</label><br>
-    <input id="measurement" class="form-control"></input><br>
-     <label class="control-label">Notes:</label><br>
-        <textarea></textarea>
-        </div>
-
-</div>
-
-    </li>
-
-        <li class="list-group-item">
-            <label>
-                <h3>{{Title}}</h3>
-            </label>
-        <div class="pull-right action-buttons">
-            <a data-toggle="modal" data-target="#editModal"><span class="glyphicon glyphicon-remove"></span></a>
-        </div>
-    <div class="row">
-        <p class="col-md-3">
-            {{Description}}
-        
-        [See 2010 ADA Standards for Accessible Design – {{ADA_standard}}]
-        </p>
-        <img class="col-md-3 col-sm-12 col-xs-12" height="200" width="300" src="../static/upload/{{filePath}}">
+        <img class="col-md-3 col-sm-12 col-xs-12" height="200" width="300" src="../static/upload/{{d.FilePath}}">
 
     <div class="form-group col-md-3">
         <label class="control-label">Does this measurement conform to ADA Standards?</label><br>
@@ -216,7 +148,8 @@ $( function() {
     </div> <!--row-->
         </li>
         <li class="list-group-item"><label>edit</label><div class="pull-right" ><span class="glyphicon glyphicon-pencil"></span></div></li>
-         {% block li %}{% endblock %}
+        {% endfor %}
+
             </ol>
 
 </div>
