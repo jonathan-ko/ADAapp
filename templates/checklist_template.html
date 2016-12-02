@@ -1,30 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>Checklists</title>
- 
-   <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet"> 
-   <link href="../static/css/jquery-ui.css" rel="stylesheet">
+    <head>
+        <title>Checklists</title>
+        <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet"> 
+        <link href="../static/css/jquery-ui.css" rel="stylesheet">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+        <script src="http://getbootstrap.com/dist/js/bootstrap.min.js"></script>
+        <script src="../static/js/jquery-ui.js"></script>
+        <script type="text/javascript" src="../static/js/jquery.fileupload.js"></script>
+        <script type="text/javascript" src="../static/js/jquery.fileupload-process.js"></script>
+        <script type="text/javascript" src="../static/js/jquery-ui.js"></script>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-    <script src="http://getbootstrap.com/dist/js/bootstrap.min.js"></script>
-    <script src="../static/js/jquery-ui.js"></script>
-    <script type="text/javascript" src="../static/js/jquery.fileupload.js"></script>
-    <script type="text/javascript" src="../static/js/jquery.fileupload-process.js"></script>
-    <script type="text/javascript" src="../static/js/jquery-ui.js"></script>
+        <script type="text/javascript">
 
-<script type="text/javascript">
+    $( function() {
 
-$( function() {
-    $( "ol" ).sortable();
-  });
+        $( "ol" ).sortable();
+        $( "[name='editList']" ).on('click',function() {
+            $(this).parent('div:has(li)').addClass('panel panel-warning');
+            alert('yo');
+        });
 
-</script>
-
-
-<script type="text/javascript">
-
-    $(function() {
         $('#fileupload').fileupload({
             url: 'upload',
             dataType: 'json',
@@ -57,37 +53,37 @@ $( function() {
     .list-group {
         margin-bottom: 0px;
     }
-</style>
-        <style>
-        .btn-file {
-            position: relative;
-            overflow: hidden;
-        }
-         
-        .btn-file input[type=file] {
-            position: absolute;
-            top: 0;
-            right: 0;
-            min-width: 100%;
-            min-height: 100%;
-            font-size: 100px;
-            text-align: right;
-            filter: alpha(opacity=0);
-            opacity: 0;
-            outline: none;
-            background: white;
-            cursor: inherit;
-            display: block;
-        }
+
+    .btn-file {
+        position: relative;
+        overflow: hidden;
+    }
+     
+    .btn-file input[type=file] {
+        position: absolute;
+        top: 0;
+        right: 0;
+        min-width: 100%;
+        min-height: 100%;
+        font-size: 100px;
+        text-align: right;
+        filter: alpha(opacity=0);
+        opacity: 0;
+        outline: none;
+        background: white;
+        cursor: inherit;
+        display: block;
+    }
+
+
     </style>
  
-  </head>
+    </head>
  
-  <body>
-<br>
+    <body>
+    <br>
+
 <div class="container">
-
-
 
 <div class="panel panel-primary">
 
@@ -97,6 +93,72 @@ $( function() {
 
 <div class="panel-body">
 
+    <ol id="ulist" class="list-group">
+
+{% for d in data %}
+
+<div class ="list-container" style="box-shadow: 10px 10px 5px #888888">
+
+    <li class="list-group-item">
+
+            <label>
+                <h3>{{d.Title}}</h3>
+            </label>
+
+        <div class="pull-right action-buttons">
+            <a name="editList" >Edit  <span class="glyphicon glyphicon-pencil"></span></a>  <a>Delete  <span class="glyphicon glyphicon-remove"></span></a>
+        </div>
+
+<div class="row">
+
+        <p class="col-md-3">
+            {{d.Description}}
+        
+        [See 2010 ADA Standards for Accessible Design – {{d.ADA_standard}}]
+        </p>
+
+    {% if d.FilePath %}
+        <img class="col-md-3 col-sm-12 col-xs-12" height="200" width="300" src="../static/upload/{{d.FilePath}}">
+    {% else %}
+
+    {% endif %}
+
+    <div class="form-group col-md-3">
+        <label class="control-label">Does this measurement conform to ADA Standards?</label><br>
+        <div>                        
+            <input name="conforms" type="checkbox" value = "true"> Yes
+            <input name="conforms" type="checkbox" value = "false"> No 
+        </div>
+    </div>
+
+    <div class="form-group col-md-3">
+        <label class="control-label">Measurement:</label><br>
+        <input id="measurement" class="form-control" name ="measurements"></input><br>
+        <label class="control-label">Notes:</label><br>
+        <textarea class="form-control"></textarea>
+    </div>
+
+</li>
+
+<div class="panel-footer" style="background:#f0ad4e;">
+
+        <button  type="button" class="btn btn-default btn-xs">Ok</button>
+        <button type="button" class="btn btn-default btn-xs">Cancel</button>
+
+</div>
+
+</div> <!--row-->
+
+</div> <!--panel default -->
+
+<div></div>
+
+
+
+       
+        {% endfor %}
+
+            </ol>
 
 
     <nav>
@@ -109,58 +171,14 @@ $( function() {
     </nav>
 
 
-<div class="well">
 
-    <p>{{ data }}</p>
-    <ol id="ulist" class="list-group">
-
-{% for d in data %}
-        <li class="list-group-item">
-            <label>
-                <h3>{{d.Title}}</h3>
-            </label>
-        <div class="pull-right action-buttons">
-            <a data-toggle="modal" data-target="#editModal"><span class="glyphicon glyphicon-remove"></span></a>
-        </div>
-    <div class="row">
-        <p class="col-md-3">
-            {{d.Description}}
-        
-        [See 2010 ADA Standards for Accessible Design – {{d.ADA_standard}}]
-        </p>
-        <img class="col-md-3 col-sm-12 col-xs-12" height="200" width="300" src="../static/upload/{{d.FilePath}}">
-
-    <div class="form-group col-md-3">
-        <label class="control-label">Does this measurement conform to ADA Standards?</label><br>
-        <div>                        
-            <input name="conforms" type="checkbox" value = "true"> Yes
-            <input name="conforms" type="checkbox" value = "false"> No 
-        </div>
-    </div>
-
-        <div class="form-group col-md-3">
-            <label class="control-label">Measurement:</label><br>
-            <input id="measurement" class="form-control" name ="measurements"></input><br>
-            <label class="control-label">Notes:</label><br>
-            <textarea></textarea>
-        </div>
-
-    </div> <!--row-->
-        </li>
-        <li class="list-group-item"><label>edit</label><div class="pull-right" ><span class="glyphicon glyphicon-pencil"></span></div></li>
-        {% endfor %}
-
-            </ol>
-
-</div>
-
-        </div>
+</div> <!--panel body-->
  
-    </div>
+</div> <!--panel primary-->
 
 
 
-</div><!--panel -->
+</div><!--container-->
 
 
 
