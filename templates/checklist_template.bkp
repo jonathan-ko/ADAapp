@@ -15,32 +15,10 @@
 
     $( function() {
 
-        $( "ol" ).sortable({change:function(){
-            var sortedIDs = $( "ol" ).sortable('toArray');
-            console.log(sortedIDs);
-        } });
+        $( "ol" ).sortable();
         $( "[name='editList']" ).on('click',function() {
             $(this).parents('.list-container').addClass('panel panel-warning').css('box-shadow','10px 10px 5px #888888').append('<div class="panel-footer" style="background:#f0ad4e;"><button type="button" class="btn btn-default btn-xs" onclick ="updateData(this)">Ok</button><button type="button" class="btn btn-default btn-xs">Cancel</button></div>');
             $(this).parent().addClass('hidden');
-        });
-
-        $( "[name='deleteItem']").on('click',function() {
-            inserted_item_id=$(this).parents('li').attr('id');
-            console.log(inserted_item_id);
-            console.log("{{checklist_name}}");            
-            //$("<input/>",{type:'hidden',name:'inserted_item_id'}).val(inserted_item_id).appendTo("form");
-            $.ajax({
-                url: '/delItem',
-                contentType: "application/json; charset=utf-8",
-                type: 'POST',
-                data: JSON.stringify({'inserted_item_id':inserted_item_id, 'checklist_name':"{{checklist_name}}"}),
-                success: function(response, status) {
-                console.log(response);
-            },
-                error: function(error) {
-                    console.log(error);
-            },
-            });
         });
 
         $('#fileupload').fileupload({
@@ -63,11 +41,10 @@
 
     })
 
-var updateData = function (elem) {
+var updateData = function (this) {
     alert('yo');
-    $(elem).parents('.list-container').removeClass('panel panel-warning').css('box-shadow','');
-    $(elem).parents('.panel-footer').remove();
-/*   $.ajax({
+    $(this).parents('.list-container').removeClass('panel panel-warning').css('box-shadow','').remove('.panel-footer');
+/*    $.ajax({
     url: '/getTypes',
     type: 'GET',
     success: function(res) {
@@ -140,14 +117,14 @@ var updateData = function (elem) {
 
 <div class ="list-container">
 
-    <li id="id_{{d.inserted_item_id}}" class="list-group-item">
+    <li class="list-group-item">
 
             <label>
                 <h3>{{d.Title}}</h3>
             </label>
 
         <div class="pull-right action-buttons">
-            <a name="editList" >Edit  <span class="glyphicon glyphicon-pencil"></span></a>  <a name="deleteItem" >Delete  <span class="glyphicon glyphicon-remove"></span></a>
+            <a name="editList" >Edit  <span class="glyphicon glyphicon-pencil"></span></a>  <a>Delete  <span class="glyphicon glyphicon-remove"></span></a>
         </div>
 
 <div class="row">

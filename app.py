@@ -4,6 +4,7 @@ import pymongo
 from pymongo import MongoClient
 import json
 from bson.json_util import dumps
+from bson.objectid import ObjectId
 	
 from werkzeug import generate_password_hash, check_password_hash, secure_filename
 
@@ -230,23 +231,48 @@ def addItem():
         Title = request.form['inputCategoryName']
         Description = request.form['inputDescription']
         filePath = request.form['filePath']
-        inserted_item_id = ADA_items.insert_one({"ADA_standard":ADA_standard, "Title":Title, "Description":Description, "filePath":filePath})
-        #Standard_Met = request.form['conforms']
-        #Measurement =request.form['measurement']
-        checklists.find_one_and_update({"checklist_name":checklist_name}, {'$push': {"checklist_items": {"ADA_standard":ADA_standard, "Title":Title, "Description":Description, "FilePath":filePath}}})
-        c = checklists.find_one({"checklist_name":d})
+        inserted_item_id = ADA_items.insert_one({"ADA_standard":ADA_standard, "Title":Title, "Description":Description, "filePath":filePath, "conforms":"", 'measurements':"", 'notes':"", 'attahmentPath':""}).inserted_id
+        checklists.find_one_and_update({"checklist_name":checklist_name}, {'$push': {"checklist_items": {"inserted_item_id":str(inserted_item_id), "ADA_standard":ADA_standard, "Title":Title, "Description":Description, "FilePath":filePath}}})
+        c = checklists.find_one({"checklist_name":checklist_name})
         data=c['checklist_items']
         return render_template('checklist_template.html', checklist_name = checklist_name, data=data)
     else:
         return render_template('error.html', error = 'Unauthorized Access')
 
+@app.route('/delItem',methods=['POST'])
+def delItem():
+    inserted_item_id_uncut=request.json['inserted_item_id']
+    checklist_name = request.json['checklist_name']
+    print inserted_item_id_uncut
+    inserted_item_id = inserted_item_id_uncut.split('_')[1]
+    print inserted_item_id
+    itemToRemove =  checklists.find_one_and_update({"checklist_name":checklist_name}, {'$pull': {"checklist_items": {"inserted_item_id":inserted_item_id}}})
+    print itemToRemove
+    return json.dumps({"data":"item deleted"})#render_template('checklist_template.html', checklist_name = checklist_name, data=data)
+
+@app.route('/updateItemStats',methods=['POST'])
+def updateItemStats():
+    if session.get('checklist_name'):
+        checklist_name=session.get('checklist_name')
+        c = checklists.find_one({"checklist_name":checklist_name})
+        items=c['checklist_items']
+        for n, item in enumerate (items):
+            email = session.get('user')
+            checklist_name = checklist_name
+            Standard_Met = request.form['conforms']
+            Measurement = request.form['measurements']
+            Notes = request.form['notes']
+            inserted_item_id=item['inserted_item_id']
+            item_obj_data_id = items_stats.insert_one({'email':email, 'checklist_name':checklist_name, 'Standard_Met':Standard_Met, 'Measurement':Measurement, 'Notes':Notes, 'Conforms':False })
+            it=checklists.find_one_and_replace({"checklist_name":checklist_name, "checklist_items":{"inserted_item_id":inserted_item_id}}, {'$set':{"Stats_id":item_obj_data_id}})
+        return json.dumps(items_stats.find({'_id':item_obj_data_id}))
+
 @app.route('/showTest',methods=['GET','POST'])
 def showTest():
     d = request.form.getlist('chklst').pop()
-    print d
     c = checklists.find_one({"checklist_name":d})
-    print c
-    data=c['checklist_items']
+    data = c['checklist_items']
+    session['checklist_name'] = d
     return render_template('checklist_template.html',data=data,checklist_name=d)
 
 @app.route('/showChecklist',methods=['GET','POST'])
