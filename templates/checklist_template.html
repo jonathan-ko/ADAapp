@@ -20,14 +20,17 @@
             console.log(sortedIDs);
         } });
         $( "[name='editList']" ).on('click',function() {
-            $(this).parents('.list-container').addClass('panel panel-warning').css('box-shadow','10px 10px 5px #888888').append('<div class="panel-footer" style="background:#f0ad4e;"><button type="button" class="btn btn-default btn-xs" onclick ="updateData(this)">Ok</button><button type="button" class="btn btn-default btn-xs">Cancel</button></div>');
+            $(this).parents('.list-container').addClass('panel panel-warning').css('box-shadow','10px 10px 5px #888888').append('<div class="panel-footer" style="background:#f0ad4e;"><button type="button" class="btn btn-default btn-xs" onclick ="updateData(this)">Ok</button><button type="button" class="btn btn-default btn-xs" onclick ="cancel(this)">Cancel</button></div>');
             $(this).parent().addClass('hidden');
+            $(this).parent().siblings('div.row').children().last().children('input').attr('readonly', false);
+            $(this).parent().siblings('div.row').children().last().children('textarea').attr('readonly', false);
         });
 
         $( "[name='deleteItem']").on('click',function() {
             inserted_item_id=$(this).parents('li').attr('id');
             console.log(inserted_item_id);
-            console.log("{{checklist_name}}");            
+            console.log("{{checklist_name}}");       
+            $(this).parents('.list-container').remove()
             //$("<input/>",{type:'hidden',name:'inserted_item_id'}).val(inserted_item_id).appendTo("form");
             $.ajax({
                 url: '/delItem',
@@ -63,24 +66,44 @@
 
     })
 
-var updateData = function (elem) {
-    alert('yo');
+var editList = function(elem) {
+            $(elem).parents('.list-container').addClass('panel panel-warning').css('box-shadow','10px 10px 5px #888888').append('<div class="panel-footer" style="background:#f0ad4e;"><button type="button" class="btn btn-default btn-xs" onclick ="updateData(this)">Ok</button><button type="button" class="btn btn-default btn-xs" onclick ="cancel(this)">Cancel</button></div>');
+            $(elem).parents('div.row').children().last().children('input').attr('readonly', false);
+            $(elem).parents('div.row').children().last().children('textarea').attr('readonly', false);
+        }
+
+var cancel = function (elem){
     $(elem).parents('.list-container').removeClass('panel panel-warning').css('box-shadow','');
-    $(elem).parents('.panel-footer').remove();
-/*   $.ajax({
-    url: '/getTypes',
-    type: 'GET',
+    $(elem).parents('.panel-footer').addClass('hidden');
+    $(elem).parents('.list-container').children().children('.action-buttons').removeClass('hidden');
+}
+
+var updateData = function (elem) {
+    //alert('yo');
+    $(elem).parents('.list-container').removeClass('panel panel-warning').css('box-shadow','');
+    $(elem).parents('.panel-footer').addClass('hidden');
+    $(elem).parents('.list-container').children().children('.action-buttons').removeClass('hidden');
+    var measurements = $(elem).parents('.list-container').children('li').children('div.row').children().last().children('input').val();
+    var item_notes = $(elem).parents('.list-container').children('li').children('div.row').children().last().children('textarea').val();
+    var conforms = $(elem).parents('.list-container').children('li').children('div.row').children('[name=compliance]').children('div').children('label').children("input[name='conforms']:checked").val();
+    var inserted_item_id=$(elem).parents('.list-container').children('li').attr('id');
+    console.log(inserted_item_id);
+
+    $.ajax({
+    url: '/updateItem',
+    contentType: "application/json; charset=utf-8",
+    type: 'POST',
+    data:  JSON.stringify({'checklist_name':"{{checklist_name}}",'conforms':conforms,'measurements':measurements,'notes':item_notes,'inserted_item_id':inserted_item_id}),
     success: function(res) {
         console.log(res);
-        var types = JSON.parse(res);
-        for (var i = types.length - 1; i >= 0; i--) {
-            $('#contactType').append("<option>"+types[i]+"</option>");
-        };
+        $(elem).parents('.list-container').children('li').children('div.row').children().last().children('input').attr('readonly',true);
+        $(elem).parents('.list-container').children('li').children('div.row').children().last().children('textarea').attr('readonly',true);
     },
     error: function(error) {
         console.log(error);
     }
-});*/
+}); 
+
 }
 
 </script>
@@ -152,31 +175,31 @@ var updateData = function (elem) {
 
 <div class="row">
 
-        <p class="col-md-3">
+        <p class="col-md-3 col-lg-3">
             {{d.Description}}
         
         [See 2010 ADA Standards for Accessible Design – {{d.ADA_standard}}]
         </p>
 
     {% if d.FilePath %}
-        <img class="col-md-3 col-sm-12 col-xs-12" height="200" width="300" src="../static/upload/{{d.FilePath}}">
+        <img class="col-md-3 col-sm-12 col-xs-12 col-lg-3" height="200" width="300" src="../static/upload/{{d.FilePath}}">
     {% else %}
 
     {% endif %}
 
-    <div class="form-group col-md-3">
+    <div name="compliance" class="form-group col-md-3 col-lg-3">
         <label class="control-label">Does this measurement conform to ADA Standards?</label><br>
         <div>                        
-            <input name="conforms" type="checkbox" value = "true"> Yes
-            <input name="conforms" type="checkbox" value = "false"> No 
+            <label class = "radio-inline"><input name="conforms" type="radio" value = "true" checked > Yes </label>
+            <label class = "radio-inline"><input name="conforms" type="radio" value = "false" onclick = "editList(this)"> No </label>
         </div>
     </div>
 
-    <div class="form-group col-md-3">
+    <div class="form-group col-md-3 col-lg-3">
         <label class="control-label">Measurement:</label><br>
-        <input id="measurement" class="form-control" name ="measurements"></input><br>
+        <input class="form-control" name ="measurements" readonly></input><br>
         <label class="control-label">Notes:</label><br>
-        <textarea id="notes" name="notes" class="form-control"></textarea><br>
+        <textarea name="notes" class="form-control" readonly></textarea><br>
 
                         <div class="input-group">
                             <span class="input-group-btn">

@@ -250,22 +250,16 @@ def delItem():
     print itemToRemove
     return json.dumps({"data":"item deleted"})#render_template('checklist_template.html', checklist_name = checklist_name, data=data)
 
-@app.route('/updateItemStats',methods=['POST'])
-def updateItemStats():
-    if session.get('checklist_name'):
-        checklist_name=session.get('checklist_name')
-        c = checklists.find_one({"checklist_name":checklist_name})
-        items=c['checklist_items']
-        for n, item in enumerate (items):
-            email = session.get('user')
-            checklist_name = checklist_name
-            Standard_Met = request.form['conforms']
-            Measurement = request.form['measurements']
-            Notes = request.form['notes']
-            inserted_item_id=item['inserted_item_id']
-            item_obj_data_id = items_stats.insert_one({'email':email, 'checklist_name':checklist_name, 'Standard_Met':Standard_Met, 'Measurement':Measurement, 'Notes':Notes, 'Conforms':False })
-            it=checklists.find_one_and_replace({"checklist_name":checklist_name, "checklist_items":{"inserted_item_id":inserted_item_id}}, {'$set':{"Stats_id":item_obj_data_id}})
-        return json.dumps(items_stats.find({'_id':item_obj_data_id}))
+@app.route('/updateItem',methods=['POST'])
+def updateItem():
+    checklist_name=request.json['checklist_name']
+    conforms=request.json['conforms']
+    measurements=request.json['measurements']
+    notes=request.json['notes']
+    inserted_item_id_uncut=request.json['inserted_item_id']
+    inserted_item_id = inserted_item_id_uncut.split('_')[1]
+    checklists.find_one_and_update({"checklist_name":checklist_name}, {'$push': {"checklist_items": {"inserted_item_id":str(inserted_item_id), 'conforms':conforms, 'measurements':measurements, 'notes':notes}}})
+    return json.dumps({'data': {'checklist_name':checklist_name, 'conforms':conforms, 'measurements':measurements, 'notes':notes}})
 
 @app.route('/showTest',methods=['GET','POST'])
 def showTest():

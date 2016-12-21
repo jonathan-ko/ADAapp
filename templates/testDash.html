@@ -118,7 +118,7 @@ $("<input/>",{type:'hidden',name:'inputContactType'}).val(selectedOption2).appen
                 var data = JSON.parse(res); 
                 for (var i = data.length - 1; i >= 0; i--) {
                   var k = Object.keys(data[i]);
-                  $('#checklists').append('<li onclick="var chklst=this.children[0].innerHTML; var input=document.getElementById(&#34;chklst&#34;); input.value=chklst; console.log(chklst); var frm=document.forms[&#34;editChecklist&#34;]; frm.submit();" class="list-group-item"><label>'+k+'</label><svg class="pencil" xmlns="http://www.w3.org/2000/svg" width="14" height="16" viewBox="0 0 14 16"><path style="fill: #767f8e" fill-rule="evenodd" d="M0 12v3h3l8-8-3-3-8 8zm3 2H1v-2h1v1h1v1zm10.3-9.3L12 6 9 3l1.3-1.3a.996.996 0 0 1 1.41 0l1.59 1.59c.39.39.39 1.02 0 1.41z"/></svg></li>');
+                  $('#checklists').append('<li class="list-group-item"><label>'+k+'</label><svg class="pencil" onclick="var chklst=this.parentNode.childNodes[0].innerHTML; var input=document.getElementById(&#34;chklst&#34;); input.value=chklst; console.log(chklst); var frm=document.forms[&#34;editChecklist&#34;]; frm.submit();" xmlns="http://www.w3.org/2000/svg" width="14" height="16" viewBox="0 0 14 16"><path style="fill: #767f8e" fill-rule="evenodd" d="M0 12v3h3l8-8-3-3-8 8zm3 2H1v-2h1v1h1v1zm10.3-9.3L12 6 9 3l1.3-1.3a.996.996 0 0 1 1.41 0l1.59 1.59c.39.39.39 1.02 0 1.41z"/></svg> <svg class="x" onclick="alert(&#34;yo&#34;)" xmlns="http://www.w3.org/2000/svg" width="12" height="16" viewBox="0 0 12 16"><path style="fill: #767f8e" fill-rule="evenodd" d="M7.48 8l3.75 3.75-1.48 1.48L6 9.48l-3.75 3.75-1.48-1.48L4.52 8 .77 4.25l1.48-1.48L6 6.52l3.75-3.75 1.48 1.48z"/></svg></li>');
                 };
 
                 
@@ -138,6 +138,11 @@ $("<input/>",{type:'hidden',name:'inputContactType'}).val(selectedOption2).appen
 <style type="text/css">
 
 .pencil {
+  position: absolute;
+  right: 40px;
+}
+
+.x {
   position: absolute;
   right: 20px;
 }
