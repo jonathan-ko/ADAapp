@@ -27,17 +27,17 @@
         });
 
         $( "[name='deleteItem']").on('click',function() {
-            inserted_item_id=$(this).parents('li').attr('id');
+            var inserted_item_id=$(this).parents('li').attr('id');
             console.log(inserted_item_id);
             console.log("{{checklist_name}}");       
-            $(this).parents('.list-container').remove()
-            //$("<input/>",{type:'hidden',name:'inserted_item_id'}).val(inserted_item_id).appendTo("form");
+            //$(this).parents('.list-container').remove();
             $.ajax({
                 url: '/delItem',
                 contentType: "application/json; charset=utf-8",
                 type: 'POST',
                 data: JSON.stringify({'inserted_item_id':inserted_item_id, 'checklist_name':"{{checklist_name}}"}),
                 success: function(response, status) {
+                $(this).parents('.list-container').remove();
                 console.log(response);
             },
                 error: function(error) {
@@ -68,6 +68,7 @@
 
 var editList = function(elem) {
             $(elem).parents('.list-container').addClass('panel panel-warning').css('box-shadow','10px 10px 5px #888888').append('<div class="panel-footer" style="background:#f0ad4e;"><button type="button" class="btn btn-default btn-xs" onclick ="updateData(this)">Ok</button><button type="button" class="btn btn-default btn-xs" onclick ="cancel(this)">Cancel</button></div>');
+            $(elem).parents('.list-container').children().children('.action-buttons').addClass('hidden');
             $(elem).parents('div.row').children().last().children('input').attr('readonly', false);
             $(elem).parents('div.row').children().last().children('textarea').attr('readonly', false);
         }
@@ -85,7 +86,7 @@ var updateData = function (elem) {
     $(elem).parents('.list-container').children().children('.action-buttons').removeClass('hidden');
     var measurements = $(elem).parents('.list-container').children('li').children('div.row').children().last().children('input').val();
     var item_notes = $(elem).parents('.list-container').children('li').children('div.row').children().last().children('textarea').val();
-    var conforms = $(elem).parents('.list-container').children('li').children('div.row').children('[name=compliance]').children('div').children('label').children("input[name='conforms']:checked").val();
+    var conforms = $(elem).parents('.list-container').children('li').children('div.row').children('[name=compliance]').children('div').children('label').children("input[name='^conforms']:checked").val();
     var inserted_item_id=$(elem).parents('.list-container').children('li').attr('id');
     console.log(inserted_item_id);
 
@@ -163,7 +164,7 @@ var updateData = function (elem) {
 
 <div class ="list-container">
 
-    <li id="id_{{d.inserted_item_id}}" class="list-group-item">
+    <li id="id_{{d.ADA_item._id}}" class="list-group-item">
 
             <label>
                 <h3>{{d.ADA_item.Title}}</h3>
@@ -183,7 +184,7 @@ var updateData = function (elem) {
 
     {% if d.ADA_item.filePath %}
         <div class="col-md-3 col-sm-12 col-xs-12 col-lg-3">
-        <img class="no-resize" height="200" width="300" src="../static/upload/{{d.ADA_item.filePath}}">
+        <img class="no-resize" height="150" width="200" src="../static/upload/{{d.ADA_item.filePath}}">
         </div>
     {% else %}
 
@@ -192,31 +193,18 @@ var updateData = function (elem) {
     <div name="compliance" class="form-group col-md-3 col-lg-3">
         <label class="control-label">Does this measurement conform to ADA Standards?</label><br>
         <div>                        
-            <label class = "radio-inline"><input name="conforms" type="radio" value = "true" checked > Yes </label>
-            <label class = "radio-inline"><input name="conforms" type="radio" value = "false" onclick = "editList(this)"> No </label>
+            <label class = "radio-inline"><input name="conforms_{{d.ADA_item._id}}" type="radio" value = "true" {% if d.item_stats.conforms==True %} checked {% else %} {% endif %} /> Yes </label>
+            <label class = "radio-inline"><input name="conforms_{{d.ADA_item._id}}" type="radio" value = "false" onclick = "editList(this)" {% if d.item_stats.conforms==False %} checked {% else %} {% endif %} /> No </label>
         </div>
     </div>
 
     <div class="form-group col-md-3 col-lg-3">
         <label class="control-label">Measurement:</label><br>
-        <input class="form-control" name ="measurements" readonly></input><br>
+        <input class="form-control" name ="measurements" readonly {% if d.item_stats.measurements %} value = "{{d.item_stats.measurements}}"{% endif %}></input><br>
         <label class="control-label">Notes:</label><br>
-        <textarea name="notes" class="form-control" readonly></textarea><br>
+        <textarea name="notes" class="form-control" readonly>{% if d.item_stats.notes %}{{d.item_stats.notes}}{% endif %} </textarea><br>
 
-                        <div class="input-group">
-                            <span class="input-group-btn">
-                            <span class="btn btn-primary btn-file">
-                                Browse&hellip; <input type="file" id="picUploader" name="file" multiple>
-                            </span>
-                            </span>
-                            <input id="browseToPic" type="text" class="form-control" readonly>          
-                            <div class="pull-right">
-                                <img id="picUpload" style="width: 140px; height: 140px;" class="img-thumbnail hidden"><input type="hidden" name="filePath" id="filePathToPic"></input>
-                            </div>
-                        </div>
-                    </div>
 
-    </div>
 
 
 </li>

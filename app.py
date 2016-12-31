@@ -235,10 +235,9 @@ def addItem():
         data=[]
         c = checklists.find_one({"checklist_name":checklist_name})       
         for i in c["checklist_items"]:
-            print i
-            print 'not i'
             print i['inserted_item_id']
-            ADA_item=ADA_items.find_one({'_id':ObjectId(i['inserted_item_id'])})
+            ADA_id = i['inserted_item_id']
+            ADA_item=ADA_items.find_one({'_id':ObjectId(ADA_id)})
             print ADA_item
             item_stats={"conforms":i["conforms"], "measurements":i["measurements"], "notes":i["notes"]}
             data.append({"ADA_item":ADA_item,"item_stats":item_stats})
@@ -252,21 +251,27 @@ def delItem():
     checklist_name = request.json['checklist_name']
     #print inserted_item_id_uncut
     inserted_item_id = inserted_item_id_uncut.split('_')[1]
-    #print inserted_item_id
-    itemToRemove =  checklists.find_one_and_update({"checklist_name":checklist_name}, {'$pull': {"checklist_items": inserted_item_id}})
-    #print itemToRemove
+    print inserted_item_id
+    itemToRemove =  checklists.find_one_and_update({"checklist_name":checklist_name}, {'$pull': {"checklist_items": {"inserted_item_id":inserted_item_id}}})
+    print itemToRemove
     return json.dumps({"data":"item deleted"})#render_template('checklist_template.html', checklist_name = checklist_name, data=data)
 
 @app.route('/updateItem',methods=['POST'])
 def updateItem():
     checklist_name=request.json['checklist_name']
-    conforms=request.json['conforms']
+    if request.json['conforms']=="true":
+        conforms=True
+    else:
+        conforms=False
     measurements=request.json['measurements']
     notes=request.json['notes']
     inserted_item_id_uncut=request.json['inserted_item_id']
     inserted_item_id = inserted_item_id_uncut.split('_')[1]
-    checklists.find_one_and_update({"checklist_name":checklist_name}, {'$push': {"checklist_items": {"inserted_item_id":inserted_item_id, "conforms":conforms, "measurements":measurements, "notes":notes}}})
-    return json.dumps({'data': {'checklist_name':checklist_name, 'conforms':conforms, 'measurements':measurements, 'notes':notes}})
+    pulled=checklists.find_one_and_update({"checklist_name":checklist_name}, {'$pull': {"checklist_items": {"inserted_item_id":inserted_item_id}}})
+    print pulled
+    pushed=checklists.find_one_and_update({"checklist_name":checklist_name}, {'$push': {"checklist_items": {"inserted_item_id":inserted_item_id, "conforms":conforms, "measurements":measurements, "notes":notes}}}) 
+    print pushed   
+    return json.dumps({'data': {'checklist_name':checklist_name, 'conforms':conforms, 'measurements':measurements, 'notes':notes, "inserted_item_id":inserted_item_id}})
 
 @app.route('/showTest',methods=['GET','POST'])
 def showTest():
@@ -274,11 +279,17 @@ def showTest():
     c = checklists.find_one({"checklist_name":d})
     data = []
     for i in c["checklist_items"]:
-        ADA_item=ADA_items.find_one({'_id':i['inserted_item_id']})
-        item_stats={"conforms":i["conforms"], "measurements":i["measurements"], "notes":i["notes"]}
+        ADA_id=i['inserted_item_id']
+        ADA_item=ADA_items.find_one({'_id': ObjectId(ADA_id)})
+        conforms=i["conforms"]
+        measurements=i["measurements"]
+        notes=i["notes"]
+        item_stats={"conforms":conforms, "measurements":measurements, "notes":notes}
+        print ADA_item
+        print item_stats
         data.append({"ADA_item":ADA_item,"item_stats":item_stats})
     session['checklist_name'] = d
-    return render_template('checklist_template.html',data=data,checklist_name=d)
+    return render_template('checklist_template.html',checklist_name=d,data=data)
 
 @app.route('/showChecklist',methods=['GET','POST'])
 def showChecklist():
